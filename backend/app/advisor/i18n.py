@@ -144,6 +144,10 @@ NEED_LABELS: dict[str, dict[str, str]] = {
     "sms": {"en": "SMS reminders", "hi": "SMS रिमाइंडर", "mr": "SMS स्मरणपत्रे"},
     "machines": {"en": "Machine monitoring", "hi": "मशीन मॉनिटरिंग", "mr": "मशीन देखरेख"},
     "fleet": {"en": "Vehicle tracking", "hi": "गाड़ी ट्रैकिंग", "mr": "वाहन ट्रॅकिंग"},
+    "remote_access": {"en": "Remote access / static IP", "hi": "रिमोट एक्सेस / स्टैटिक IP", "mr": "रिमोट ऍक्सेस / स्टॅटिक IP"},
+    "fast_internet": {"en": "Fast internet", "hi": "तेज़ इंटरनेट", "mr": "वेगवान इंटरनेट"},
+    "mobile": {"en": "Mobile lines for staff", "hi": "स्टाफ़ के लिए मोबाइल लाइन", "mr": "कर्मचाऱ्यांसाठी मोबाइल लाइन"},
+    "tollfree": {"en": "Toll-free number", "hi": "टोल-फ़्री नंबर", "mr": "टोल-फ्री नंबर"},
     "central_mgmt": {"en": "Manage all branches centrally", "hi": "सभी ब्रांच एक जगह से", "mr": "सर्व शाखा एका ठिकाणाहून"},
 }
 

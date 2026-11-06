@@ -133,7 +133,13 @@ def public_case(case: dict) -> dict:
         docs[slot] = {"label": DOC_LABELS[slot], "uploaded_at": d["uploaded_at"], "fields": f, "quality": d["ocr"]["quality"],
                       "detected_type": d["ocr"]["doc_type"], "purge_after": d["purge_after"]}
     return {"session_id": case["session_id"], "docs": docs, "digilocker": bool(case.get("digilocker")), "result": case.get("result"),
-            "missing": [t for t in REQUIRED_DOCS if t not in case["docs"] and not (t == "signatory_id" and case.get("digilocker"))]}
+            "missing": [t for t in REQUIRED_DOCS if t not in case["docs"] and not (t == "signatory_id" and case.get("digilocker"))
+                        and not (t == "gst_certificate" and _has_declared_gstin(case["session_id"]))]}
+
+
+def _has_declared_gstin(session_id: str) -> bool:
+    s = store.get("sessions", session_id)
+    return bool(s and s.get("vault", {}).get("gstin"))
 
 
 def purge_expired() -> int:

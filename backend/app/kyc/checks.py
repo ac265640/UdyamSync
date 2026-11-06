@@ -81,6 +81,9 @@ def evaluate(docs: dict[str, OcrResult | None], *, declared_gstin: str | None = 
     # 1. Completeness + right document in the right slot
     for t in REQUIRED_DOCS:
         d = docs.get(t)
+        if d is None and t == "gst_certificate" and declared_gstin:
+            c.add("present.gst_certificate", "GST details", "pass", "Fetched directly from the GST registry using your GSTIN — no certificate upload needed.", doc=t)
+            continue
         if d is None:
             fix = {
                 "udyam_certificate": "Upload it, or type your Udyam number and we'll fetch it from the Udyam registry. No Udyam yet? Registration is free at udyamregistration.gov.in.",

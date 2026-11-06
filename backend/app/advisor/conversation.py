@@ -170,6 +170,9 @@ def _apply_gstin(session: dict, gstin: str, replies: list[str]) -> None:
     udyam = find_udyam_by_name(r["legal_name"]) or find_udyam_by_name(r["trade_name"])
     if udyam:
         u = lookup_udyam(udyam)
+        nic = extract(u.get("nic_description") or "")
+        if nic.get("business_type"):  # Udyam's NIC activity is more precise than the trade name
+            merge(p, {"business_type": nic["business_type"], "segment": nic["segment"]})
         p.udyam_masked = mask_udyam(udyam)
         p.udyam_type = u.get("enterprise_type")
         p.prefilled_from.append("Udyam registry")

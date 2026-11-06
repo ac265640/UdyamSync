@@ -115,7 +115,7 @@ BUSINESS_PATTERNS: list[tuple[str, str, str]] = [
     (r"auto.?parts|automobile parts|ऑटो पार्ट", "Auto-parts unit", "mfg"),
     (r"textile|weaving|loom|spinning|टेक्सटाइल|कपड़ा मिल|पावरलूम", "Textile unit", "mfg"),
     (r"food processing|masala|spices|pickle|namkeen|फूड प्रोसेसिंग|मसाला", "Food processing unit", "mfg"),
-    (r"furniture|carpent|फर्नीचर", "Furniture workshop", "mfg"),
+    (r"furniture|carpent|woodcraft|woodwork|फर्नीचर", "Furniture workshop", "mfg"),
     (r"packaging|carton|corrugat|पैकेजिंग", "Packaging unit", "mfg"),
     (r"plastic|moulding|molding|प्लास्टिक", "Plastic moulding unit", "mfg"),
     (r"printing|\bpress\b|छपाई|प्रिंटिंग", "Printing press", "mfg"),
@@ -183,7 +183,7 @@ HINDI_NUMBERS = {
 _DEVANAGARI_DIGITS = str.maketrans("०१२३४५६७८९", "0123456789")
 _NUM = r"(\d{1,3})"
 EMP_WORDS = r"(?:log|logon|logo|staff|employees?|people|workers?|members?|karmachari|aadmi|team|लोग|कर्मचारी|स्टाफ|आदमी|जण|कामगार)"
-SITE_WORDS = r"(?:branch(?:es)?|outlets?|stores?|shops?|sites?|locations?|dukaan|dukan|clinics?|centres?|centers?|offices?|units?|restaurants?|cafes?|pharmacies|salons?|gyms?|hotels?|schools?|pre-?schools?|factories|plants?|showrooms?|godowns?|warehouses?|क्लिनिक|ऑफिस|स्टोर|रेस्टोरेंट|फैक्ट्री|जिम|होटल|स्कूल|शाखा|शाखाएं|ब्रांच|दुकानें|दुकान|आउटलेट|जगह|ठिकाने)"
+SITE_WORDS = r"(?:branch(?:es)?|outlets?|stores?|shops?|sites?|locations?|dukaan|dukan|clinics?|centres?|centers?|offices?|units?|workshops?|restaurants?|cafes?|pharmacies|salons?|gyms?|hotels?|schools?|pre-?schools?|factories|plants?|showrooms?|godowns?|warehouses?|क्लिनिक|ऑफिस|स्टोर|रेस्टोरेंट|फैक्ट्री|जिम|होटल|स्कूल|शाखा|शाखाएं|ब्रांच|दुकानें|दुकान|आउटलेट|जगह|ठिकाने)"
 GSTIN_IN_TEXT = re.compile(r"\b\d{2}[A-Z]{5}\d{4}[A-Z][1-9A-Z]Z[0-9A-Z]\b", re.I)
 UDYAM_IN_TEXT = re.compile(r"\bUDYAM-[A-Z]{2}-\d{2}-\d{7}\b", re.I)
 PIN_IN_TEXT = re.compile(r"(?<!\d)([1-9]\d{5})(?!\d)")

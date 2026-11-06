@@ -70,7 +70,7 @@ def resume(session_id: str) -> dict:
     s = conversation.get_session(session_id)
     if s is None:
         raise HTTPException(404, "Session not found or expired")
-    return {**conversation._response(s, [], []), "messages": s["messages"]}
+    return {**conversation._response(s, [], []), "messages": s["messages"], "cart": s.get("cart")}
 
 
 @router.post("/sessions/{session_id}/messages")

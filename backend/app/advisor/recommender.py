@@ -117,9 +117,9 @@ def _picks(profile: Profile, tier: str) -> list[Pick]:
     if "cctv" in needs or (pro and seg in ("micro", "multi", "mfg")):
         per_site = 2 if seg in ("micro", "prof") else 4
         picks.append(Pick("P23", per_site * sites, ["need:cctv"] if "cctv" in needs else ["tier:pro"]))
-        if seg in ("prof", "mfg") and rec:
-            picks.append(Pick("P11", 1, ["need:remote_access"]))
-    elif "remote_access" in needs:
+        if seg in ("prof", "mfg") and rec and picks[0].product_id in ("P01", "P02", "P03"):
+            picks.append(Pick("P11", 1, ["type:remote_view"]))  # leased lines already include static IPs
+    elif "remote_access" in needs and picks[0].product_id in ("P01", "P02", "P03"):
         picks.append(Pick("P11", 1, ["need:remote_access"]))
     if "machines" in needs or (pro and seg == "mfg"):
         picks.append(Pick("P24", _clamp(math.ceil(emp / 5), 2, 20), ["need:machines"]))

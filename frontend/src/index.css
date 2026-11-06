@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Noto Sans", "Noto Sans Devanagari", sans-serif;
+  --color-ink: #0f172a;
+}
+
+:root {
+  --brand: #0B1F4B;      /* Accel navy */
+  --brand-2: #00B5E2;    /* Accel cyan */
+  --brand-soft: #e6f7fc;
+  --brand-contrast: #ffffff;
+}
+[data-theme="airtel"] {
+  --brand: #E40000;
+  --brand-2: #ff4d4d;
+  --brand-soft: #fdecec;
+  --brand-contrast: #ffffff;
+}
+
+html, body, #root { height: 100%; }
+body { background: #f8fafc; color: #0f172a; -webkit-font-smoothing: antialiased; }
+
+@utility btn { @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition active:scale-[.98] disabled:opacity-50 disabled:cursor-not-allowed; }
+@utility btn-primary { @apply btn text-white shadow-sm; background: var(--brand); &:hover { filter: brightness(1.1); } }
+@utility btn-ghost { @apply btn bg-white text-slate-700 ring-1 ring-slate-200 hover:bg-slate-50; }
+@utility card { @apply rounded-2xl bg-white shadow-sm ring-1 ring-slate-200/70; }
+@utility chip { @apply rounded-full border px-3 py-1.5 text-sm transition; }
+@utility pill { @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium; }
+@utility bg-brand { background: var(--brand); }
+@utility bg-brand-2 { background: var(--brand-2); }
+@utility bg-brand-soft { background: var(--brand-soft); }
+@utility text-brand { color: var(--brand); }
+@utility text-brand-2 { color: var(--brand-2); }
+@utility border-brand { border-color: var(--brand); }
+@utility ring-brand { --tw-ring-color: var(--brand); }
+.fade-in { animation: fade .25s ease-out; }
+@keyframes fade { from { opacity: 0; transform: translateY(4px) } to { opacity: 1; transform: none } }
+.typing span { animation: blink 1.2s infinite; }
+.typing span:nth-child(2) { animation-delay: .2s } .typing span:nth-child(3) { animation-delay: .4s }
+@keyframes blink { 0%, 80%, 100% { opacity: .2 } 40% { opacity: 1 } }
+.wa-bg { background-color: #efeae2; background-image: radial-gradient(#d9d2c5 1px, transparent 1px); background-size: 18px 18px; }
+
+@media print { header, footer, .print\:hidden { display: none !important } }

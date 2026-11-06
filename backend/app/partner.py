@@ -165,8 +165,8 @@ def model() -> PropensityModel:
 def winback_score(propensity: float, reason: str | None) -> int:
     rec = RECOVERABILITY.get(reason or "", 0.4)
     # propensity is ~0-0.4; stretch to 0-100 with a soft root so ranking stays meaningful
-    p = min(1.0, propensity / 0.35)
-    return int(round(100 * (0.55 * math.sqrt(p) + 0.45 * min(1.0, rec / 0.5))))
+    p = min(1.0, propensity / 0.5)
+    return int(round(100 * (0.55 * math.sqrt(p) + 0.45 * min(1.0, rec / 0.6))))
 
 
 @lru_cache
