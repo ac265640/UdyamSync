@@ -24,28 +24,28 @@ from .data import SEGMENT_NAMES, get_dataset
 CATEGORICAL = ["segment", "lead_source", "city_tier", "has_gstin", "has_udyam", "current_internet", "annual_turnover_band"]
 NUMERIC = ["log_employees", "sites", "log_spend", "n_interest"]
 
-# How much of each drop reason the digital journey can win back (0-1). Stated assumptions,
-# editable as sliders in the executive dashboard.
+# How much of each drop reason the digital journey can win back (0-1). Deliberately conservative,
+# stated assumptions — editable as sliders in the executive dashboard.
 RECOVERABILITY = {
-    "Owner had no time for a visit": 0.80,
-    "Visit not scheduled by sales": 0.85,
-    "Quote too complex to understand": 0.80,
-    "Quote took too long to arrive": 0.85,
-    "Found paperwork too long": 0.75,
-    "Missing GST or Udyam document": 0.55,
-    "Authorised signatory not available": 0.70,
-    "Document details did not match": 0.60,
-    "First payment failed": 0.70,
-    "Site not feasible for fibre": 0.70,
-    "Installation delayed beyond 21 days": 0.50,
-    "Price too high": 0.30,
-    "Competitor offered cheaper plan": 0.25,
-    "Decided to wait": 0.40,
-    "Only wanted a mobile plan": 0.60,
-    "Locked in with current provider": 0.30,
-    "Customer cancelled before install": 0.30,
-    "Unreachable after 3 attempts": 0.20,
-    "Not interested on first call": 0.10,
+    "Owner had no time for a visit": 0.45,
+    "Visit not scheduled by sales": 0.50,
+    "Quote too complex to understand": 0.45,
+    "Quote took too long to arrive": 0.50,
+    "Found paperwork too long": 0.45,
+    "Missing GST or Udyam document": 0.30,
+    "Authorised signatory not available": 0.40,
+    "Document details did not match": 0.35,
+    "First payment failed": 0.50,
+    "Site not feasible for fibre": 0.50,
+    "Installation delayed beyond 21 days": 0.30,
+    "Price too high": 0.15,
+    "Competitor offered cheaper plan": 0.10,
+    "Decided to wait": 0.20,
+    "Only wanted a mobile plan": 0.30,
+    "Locked in with current provider": 0.10,
+    "Customer cancelled before install": 0.15,
+    "Unreachable after 3 attempts": 0.10,
+    "Not interested on first call": 0.05,
     "Wrong or invalid number": 0.0,
 }
 
@@ -163,10 +163,10 @@ def model() -> PropensityModel:
 
 
 def winback_score(propensity: float, reason: str | None) -> int:
-    rec = RECOVERABILITY.get(reason or "", 0.6)
-    # propensity is ~0-0.4; stretch to 0-100 with a soft log so ranking stays meaningful
+    rec = RECOVERABILITY.get(reason or "", 0.4)
+    # propensity is ~0-0.4; stretch to 0-100 with a soft root so ranking stays meaningful
     p = min(1.0, propensity / 0.35)
-    return int(round(100 * (0.55 * math.sqrt(p) + 0.45 * rec)))
+    return int(round(100 * (0.55 * math.sqrt(p) + 0.45 * min(1.0, rec / 0.5))))
 
 
 @lru_cache
