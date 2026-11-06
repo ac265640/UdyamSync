@@ -1,7 +1,13 @@
-import pytest
-from fastapi.testclient import TestClient
+import os
+import tempfile
 
-from app.main import app
+os.environ.setdefault("VAR_DIR", tempfile.mkdtemp(prefix="udyamsync-test-"))
+os.environ.setdefault("LLM_PROVIDER", "none")
+
+import pytest  # noqa: E402
+from fastapi.testclient import TestClient  # noqa: E402
+
+from app.main import app  # noqa: E402
 
 
 @pytest.fixture(scope="session")
