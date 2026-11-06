@@ -1,8 +1,9 @@
 import { ArrowLeft, CheckCheck, Mic, MoreVertical, Paperclip, Phone, Send, Video } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { api, inr, type AdvisorResponse, type Chip } from '../api'
 import { useBrand } from '../brand'
+import Listening from '../components/Listening'
 import { RichText } from '../components/ui'
 import { useSpeechInput } from '../components/voice'
 import { LANGS } from '../journey/Journey'
@@ -12,7 +13,9 @@ const now = () => new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minu
 
 export default function WhatsApp() {
   const { name } = useBrand()
-  const [lang, setLang] = useState('hi')
+  const [params] = useSearchParams()
+  const [lang, setLang] = useState(params.get('lang') || 'hi')
+  const said = useRef(false)
   const [sid, setSid] = useState<string | null>(null)
   const [msgs, setMsgs] = useState<Msg[]>([])
   const [chips, setChips] = useState<Chip[]>([])
@@ -20,15 +23,22 @@ export default function WhatsApp() {
   const [typing, setTyping] = useState(false)
   const end = useRef<HTMLDivElement>(null)
 
-  const start = useCallback((l: string) => {
-    setMsgs([{ from: 'me', text: 'Hi 👋', time: now() }])
+  const start = useCallback((l: string, alive: () => boolean) => {
+    setMsgs([{ from: 'me', text: 'Hi', time: now() }])
+    setSid(null)
+    said.current = false
     api.start(l, 'whatsapp', null, 'WhatsApp campaign').then((r) => {
+      if (!alive()) return
       setSid(r.session_id)
       setChips(r.chips)
       setMsgs((m) => [...m, ...r.replies.map((t) => ({ from: 'biz' as const, text: t, time: now() }))])
     })
   }, [])
-  useEffect(() => { start(lang) }, [lang, start])
+  useEffect(() => {
+    let alive = true
+    start(lang, () => alive)
+    return () => { alive = false }
+  }, [lang, start])
   useEffect(() => { end.current?.scrollIntoView({ behavior: 'smooth' }) }, [msgs, typing])
 
   const send = useCallback(async (text: string, label?: string, voice = false) => {
@@ -45,6 +55,10 @@ export default function WhatsApp() {
     setMsgs((m) => [...m, ...out])
   }, [sid])
   const voice = useSpeechInput(lang, (t) => send(t, t, true))
+  useEffect(() => {
+    const say = params.get('say')
+    if (sid && say && !said.current) { said.current = true; setTimeout(() => send(say), 600) }
+  }, [sid, params, send])
 
   return (
     <div className="mx-auto flex max-w-5xl flex-col items-center gap-6 px-4 py-6 lg:flex-row lg:items-start">
@@ -80,6 +94,7 @@ export default function WhatsApp() {
             ))}
           </div>
         )}
+        {voice.listening && <Listening lang={lang} onStop={voice.stop} dark />}
         <form onSubmit={(e) => { e.preventDefault(); send(input) }} className="flex items-center gap-1.5 bg-[#efeae2] px-2 pb-2 pt-1">
           <div className="flex flex-1 items-center gap-2 rounded-full bg-surface px-3 py-2">
             <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Message" className="min-w-0 flex-1 text-sm outline-none" />

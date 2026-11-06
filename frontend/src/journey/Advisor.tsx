@@ -1,6 +1,7 @@
 import { Bot, Mic, MicOff, PhoneCall, Send, Sparkles, Volume2, VolumeX } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { api, inr, type AdvisorResponse, type Chip } from '../api'
+import Listening from '../components/Listening'
 import { RichText } from '../components/ui'
 import { speak, useSpeechInput } from '../components/voice'
 
@@ -118,6 +119,7 @@ export default function Advisor({ state, setState, onCheckout }: { state: Adviso
         </div>
       )}
 
+      {voice.listening && <Listening lang={state.lang} onStop={voice.stop} />}
       <form onSubmit={(e) => { e.preventDefault(); send(input) }} className="flex items-center gap-2 border-t border-line bg-surface p-2">
         <button type="button" onClick={() => setTts(!tts)} className="rounded-lg p-2 text-muted hover:bg-paper" title={tts ? 'Voice replies on' : 'Voice replies off'}>
           {tts ? <Volume2 size={18} /> : <VolumeX size={18} />}

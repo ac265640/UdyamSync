@@ -61,7 +61,12 @@ export default function Journey() {
 
   function begin(l: string) {
     setOrder(null)
-    api.start(l, partner ? 'partner' : 'web', partner, params.get('source')).then((r) => {
+    const say = params.get('say')
+    api.start(l, partner ? 'partner' : 'web', partner, params.get('source')).then(async (r) => {
+      if (say) {
+        await api.send(r.session_id, say)
+        r = await api.resume(r.session_id)
+      }
       setState(r)
       persist({ sid: r.session_id, step: 'advisor', lang: l, partner })
     }).catch((e) => setError(String(e.message)))
@@ -118,7 +123,7 @@ export default function Journey() {
           </div>
           <div className="min-h-[34rem]">
             {saved.step === 'advisor' && <Advisor state={state} setState={setState} onCheckout={() => go('quote')} />}
-            {saved.step === 'quote' && <OneBill state={state} onBack={() => go('advisor')} onContinue={() => go('kyc')} />}
+            {saved.step === 'quote' && <OneBill state={state} onState={setState} onBack={() => go('advisor')} onContinue={() => go('kyc')} />}
             {saved.step === 'kyc' && <Kyc sid={saved.sid} lang={lang} onBack={() => go('quote')} onContinue={() => go('pay')} />}
             {saved.step === 'pay' && (
               <Pay sid={saved.sid} state={state} onBack={() => go('kyc')} onOrdered={(o) => { setOrder(o); persist({ ...saved, step: 'track', orderId: o.id }) }} />

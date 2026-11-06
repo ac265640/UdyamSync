@@ -77,6 +77,11 @@ def _picks(profile: Profile, tier: str) -> list[Pick]:
     needs = set(profile.needs)
     rec, pro = tier in ("recommended", "pro"), tier == "pro"
     picks: list[Pick] = [_connectivity(profile, tier, ctx)]
+    # Branch-by-branch feasibility: fibre where it reaches, 5G AirFiber where it doesn't, one bill.
+    no_fibre = sum(1 for st in profile.site_list if not st.get("fibre", True))
+    if profile.site_list and 0 < no_fibre < len(profile.site_list) and picks[0].product_id in ("P01", "P02", "P03"):
+        picks[0].quantity = len(profile.site_list) - no_fibre
+        picks.append(Pick("P04", no_fibre, ["feasibility:no_fibre"]))
 
     # Mobile lines
     if seg == "micro":

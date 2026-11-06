@@ -7,6 +7,7 @@ import Inspector from './pages/Inspector'
 import MyData from './pages/MyData'
 import Partner from './pages/Partner'
 import Privacy from './pages/Privacy'
+import Sign from './pages/Sign'
 import TrackPage from './pages/TrackPage'
 import WhatsApp from './pages/WhatsApp'
 
@@ -24,6 +25,7 @@ export default function App() {
         <Route path="/kyc-inspector" element={<Inspector />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/my-data/:sid" element={<MyData />} />
+        <Route path="/sign/:token" element={<Sign />} />
         <Route path="*" element={<Home />} />
       </Routes>
     </Layout>

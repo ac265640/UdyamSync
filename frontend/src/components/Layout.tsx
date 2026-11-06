@@ -2,6 +2,7 @@ import { ArrowRight, Menu, X } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { useBrand } from '../brand'
+import DemoBar, { DemoToggle } from './DemoBar'
 import { Logo } from './ui'
 
 const LINKS = [
@@ -47,10 +48,12 @@ export default function Layout({ children }: { children: ReactNode }) {
         )}
       </header>
       <main className="flex-1">{children}</main>
+      <DemoBar />
       <footer className="border-t border-line">
         <div className="mx-auto flex max-w-[1240px] flex-col gap-4 px-5 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-8">
           <div className="flex items-center gap-3"><Logo compact /><span>{name} UdyamSync — built for Airtel SYNC 2026, YTL Hackathon, Enterprise Track A.</span></div>
           <div className="flex flex-wrap gap-x-5 gap-y-1">
+            <DemoToggle />
             <Link className="link" to="/privacy">Privacy note</Link>
             <a className="link" href="https://github.com/ac265640/UdyamSync" target="_blank" rel="noreferrer">Source</a>
             <span>All businesses, people and figures are synthetic. Text animation components adapted from React Bits.</span>

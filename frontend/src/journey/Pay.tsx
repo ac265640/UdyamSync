@@ -1,6 +1,7 @@
 import { ArrowLeft, BadgeCheck, FileSignature, Smartphone } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { api, inr, type AdvisorResponse, type Order, type Quote } from '../api'
+import { Send, Share2 } from 'lucide-react'
 import SlideCommit from '../bits/SlideCommit'
 import { ErrorNote } from '../components/ui'
 
@@ -57,10 +58,11 @@ export default function Pay({ sid, state, onBack, onOrdered }: { sid: string; st
             <button onClick={() => setOtpSent(true)} className="btn-ghost mt-2 w-full text-xs">Send Aadhaar e-Sign OTP</button>
           ) : (
             <div className="mt-2 flex gap-2">
-              <input value={otp} onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))} placeholder="6-digit OTP (any, demo)" className="min-w-0 flex-1 rounded-lg px-2 py-1.5 text-sm ring-1 ring-line" />
+              <input value={otp} onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))} placeholder="6-digit OTP (any, demo)" className="field !py-1.5" />
               <button disabled={otp.length !== 6} onClick={() => setSigned(true)} className="btn-primary !py-1.5 text-xs">Sign</button>
             </div>
           )}
+          {!signed && <RemoteSign sid={sid} onSigned={() => setSigned(true)} />}
         </div>
 
         <div className="rounded-xl p-3 ring-1 ring-line">
@@ -91,6 +93,44 @@ export default function Pay({ sid, state, onBack, onOrdered }: { sid: string; st
           />
         </div>
       </div>
+    </div>
+  )
+}
+
+
+/** The signatory isn't at the counter: send them a link; this screen ticks over when they sign. */
+function RemoteSign({ sid, onSigned }: { sid: string; onSigned: () => void }) {
+  const [open, setOpen] = useState(false)
+  const [name, setName] = useState('')
+  const [phone, setPhone] = useState('')
+  const [link, setLink] = useState<{ path: string; phone_masked: string } | null>(null)
+  const [err, setErr] = useState<string | null>(null)
+  useEffect(() => {
+    if (!link) return
+    const t = setInterval(() => api.esignStatus(sid).then((s) => { if (s.status === 'signed') { clearInterval(t); onSigned() } }), 2500)
+    return () => clearInterval(t)
+  }, [link, sid, onSigned])
+  if (!open) return <button onClick={() => setOpen(true)} className="link mt-2 text-xs text-muted">Signatory not here? Send them a signing link</button>
+  if (link) {
+    const url = `${location.origin}${link.path}`
+    return (
+      <div className="mt-2 space-y-2 rounded-lg bg-paper p-2.5 text-xs">
+        <div className="flex items-center gap-1.5 font-medium"><span className="h-2 w-2 animate-pulse rounded-full bg-haldi" /> Waiting for {name.split(' ')[0]} to sign (sent to {link.phone_masked})</div>
+        <div className="flex gap-2">
+          <a className="btn-ghost flex-1 !py-1.5 text-xs" target="_blank" rel="noreferrer" href={`https://wa.me/?text=${encodeURIComponent(`Please review and e-sign our Accel Business order: ${url}`)}`}><Share2 size={13} /> WhatsApp</a>
+          <a className="btn-ghost flex-1 !py-1.5 text-xs" target="_blank" rel="noreferrer" href={link.path}>Open as signatory</a>
+        </div>
+      </div>
+    )
+  }
+  return (
+    <div className="mt-2 space-y-2 rounded-lg bg-paper p-2.5">
+      <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Signatory's name" className="field !py-1.5 !text-xs" />
+      <div className="flex gap-2">
+        <input value={phone} onChange={(e) => setPhone(e.target.value.replace(/[^0-9+ -]/g, ''))} inputMode="tel" placeholder="Mobile number" className="field !py-1.5 !text-xs" />
+        <button disabled={name.length < 2 || phone.replace(/\D/g, '').length < 10} onClick={() => api.sendEsign(sid, name, phone).then(setLink).catch((e) => setErr(e.message))} className="btn-primary !px-3 !py-1.5 text-xs"><Send size={13} /> Send</button>
+      </div>
+      {err && <p className="text-[11px] text-rose-700">{err}</p>}
     </div>
   )
 }

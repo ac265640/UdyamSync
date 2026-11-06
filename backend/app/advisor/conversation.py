@@ -28,11 +28,10 @@ INTENTS = {
     "mobile_only": r"only (want |need )?(a )?(sim|mobile)|sirf (sim|mobile)|सिर्फ़? (सिम|मोबाइल)|just (a )?(sim|mobile)",
     "accept": r"^(ok|okay|yes|haan|ha|हाँ|हां|ठीक|theek|done|proceed|continue|aage|आगे|chalo|let'?s go|book)\b",
 }
-FIBRE_GAP_SUFFIX = 8  # mock feasibility: pincodes ending 00-07 have no fibre (~8%, matches the data's drop rate)
-
-
 def fibre_feasible(pincode: str | None) -> bool:
-    return not (pincode and pincode.isdigit() and int(pincode[-2:]) < FIBRE_GAP_SUFFIX)
+    from ..feasibility import fibre_ok
+
+    return fibre_ok(pincode)
 
 
 def _lang(session: dict) -> str:
@@ -233,7 +232,10 @@ def _ensure_lead(session: dict, reason: str, status: str = "open") -> dict:
 def _recommend(session: dict, replies: list[str]) -> list[dict]:
     p = Profile.from_dict(session["profile"])
     lang = _tlang(session)
-    if p.pincode:
+    if p.site_list:
+        p.fibre_feasible = any(st.get("fibre", True) for st in p.site_list)
+        session["profile"] = p.to_dict()
+    elif p.pincode:
         p.fibre_feasible = fibre_feasible(p.pincode)
         session["profile"] = p.to_dict()
     rec = recommend(p, session.get("term_months"))
@@ -247,7 +249,10 @@ def _recommend(session: dict, replies: list[str]) -> list[dict]:
     session["stage"] = "recommended"
     q = rec["tiers"][rec["default_tier"]]
     allowed = {q["monthly_total"], q["connectivity_monthly"], p.current_spend or 0}
-    if not p.fibre_feasible:
+    gaps = [f"{st['pincode']} ({st['name']})" for st in p.site_list if not st.get("fibre", True)]
+    if gaps:
+        replies.append(_say(session, "no_fibre", pincode=", ".join(gaps)))
+    elif not p.fibre_feasible:
         replies.append(_say(session, "no_fibre", pincode=p.pincode))
     replies.append(_say(session, "recommend_intro", allowed, btype=btype_label(p.business_type, lang), bundle=rec["default_tier"].title(), monthly=f"{q['monthly_total']:,}", days=q["full_activation_days"]))
     if p.current_spend and q["connectivity_monthly"] <= p.current_spend:
@@ -443,6 +448,17 @@ def update_profile(session_id: str, updates: dict) -> dict:
         raise KeyError(session_id)
     p = Profile.from_dict(session["profile"])
     allowed = {"employees", "sites", "city", "business_type", "pincode", "current_spend", "needs"}
+    if "site_list" in updates:
+        from ..feasibility import check
+
+        sites = []
+        for i, st in enumerate(updates["site_list"][:50]):
+            f = check(str(st.get("pincode", "")))
+            sites.append({"name": (str(st.get("name") or f"Site {i + 1}"))[:60], "pincode": f["pincode"], "fibre": bool(f.get("fibre", True)), "valid": f["valid"]})
+        p.site_list = [x for x in sites if x["valid"]]
+        if p.site_list:
+            p.sites = len(p.site_list)
+            p.pincode = p.site_list[0]["pincode"]
     found = {k: v for k, v in updates.items() if k in allowed}
     if "business_type" in found:
         seg = get_dataset().business_segment.get(found["business_type"])

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { api } from '../api'
 import { Section, Spinner, StatusIcon, Verdict } from '../components/ui'
 
@@ -6,7 +7,8 @@ const DOCS: Record<string, string> = { gst_certificate: 'GST certificate', udyam
 
 export default function Inspector() {
   const [list, setList] = useState<Awaited<ReturnType<typeof api.samples>> | null>(null)
-  const [sel, setSel] = useState('K01')
+  const [params] = useSearchParams()
+  const [sel, setSel] = useState(() => (/^K(0[1-9]|1[0-2])$/.test(params.get('k') ?? '') ? params.get('k')! : 'K01'))
   const [r, setR] = useState<Awaited<ReturnType<typeof api.sample>> | null>(null)
   useEffect(() => { api.samples().then(setList) }, [])
   useEffect(() => { setR(null); api.sample(sel).then(setR) }, [sel])

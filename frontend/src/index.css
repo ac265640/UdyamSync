@@ -128,6 +128,7 @@ input, textarea { caret-color: var(--brand); }
 /* chat + misc */
 .typing span { animation: blink 1.2s infinite; }
 .typing span:nth-child(2) { animation-delay: .2s } .typing span:nth-child(3) { animation-delay: .4s }
+@keyframes level { from { transform: scaleY(.25); } to { transform: scaleY(1); } }
 @keyframes blink { 0%, 80%, 100% { opacity: .2 } 40% { opacity: 1 } }
 .msg-in { animation: msg-in 260ms var(--ease-out-soft) both; }
 @keyframes msg-in { from { opacity: 0; transform: translateY(6px) scale(.98); } to { opacity: 1; transform: none; } }

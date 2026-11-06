@@ -61,7 +61,7 @@ Or with Docker: `docker compose up --build`, then open http://localhost:8080.
 
 Optional AI: copy `.env.example` to `.env`, then set `LLM_PROVIDER=gemini` and a free Google AI Studio key (no card needed). Without a key, the advisor runs fully offline on rules and templates.
 
-Tests: `cd backend && .venv/bin/python -m pytest -q`. There are 63 tests: the 30 advisor scenarios, all 12 KYC specimens, end-to-end order flow, consent tamper detection, encryption and erasure.
+Tests: `cd backend && .venv/bin/python -m pytest -q`. There are 65 tests: the 30 advisor scenarios, all 12 KYC specimens, end-to-end order flow, consent tamper detection, encryption and erasure.
 
 ## Repository
 | Path | What |

@@ -60,3 +60,27 @@ def test_analytics(client):
     assert r["after"]["activations"] > r["before"]["activations"]
     zero = client.post("/api/analytics/replay", json={"recovery": {k: 0 for k in [d["reason"] for d in b["drops"]]}}).json()
     assert zero["after"]["activations"] == 368  # no recovery -> exactly the baseline
+
+
+def test_multi_site_feasibility(client):
+    s = client.post("/api/advisor/sessions", json={"lang": "en"}).json()["session_id"]
+    client.post(f"/api/advisor/sessions/{s}/messages", json={"text": "3 restaurants in Pune, 25 staff, need CCTV"})
+    r = client.patch(f"/api/advisor/sessions/{s}/profile", json={"site_list": [{"name": "A", "pincode": "411038"}, {"name": "B", "pincode": "411001"}]}).json()
+    q = r["recommendation"]["tiers"][r["recommendation"]["default_tier"]]
+    ids = {l["product_id"]: l["quantity"] for l in q["lines"]}
+    assert ids.get("P04") == 1 and sum(ids.get(p, 0) for p in ("P01", "P02", "P03")) == 1
+    assert any("411001" in x for x in r["replies"])
+
+
+def test_remote_esign(client):
+    s = client.post("/api/advisor/sessions", json={"lang": "en"}).json()["session_id"]
+    client.post(f"/api/advisor/sessions/{s}/messages", json={"text": "salon in Pune, 3 people, 1 shop"})
+    client.post(f"/api/advisor/sessions/{s}/messages", json={"text": "need:none"})
+    link = client.post("/api/esign/links", json={"session_id": s, "name": "Pooja Shah", "phone": "9876543210"}).json()
+    assert client.get(f"/api/esign/status/{s}").json()["status"] == "sent"
+    v = client.get(f"/api/esign/{link['token']}").json()
+    assert v["signatory"] == "Pooja S." and v["monthly"]
+    assert client.post(f"/api/esign/{link['token']}/sign", json={"otp": "123"}).status_code == 400
+    assert client.post(f"/api/esign/{link['token']}/sign", json={"otp": "123456"}).json()["status"] == "signed"
+    assert client.get(f"/api/esign/status/{s}").json()["status"] == "signed"
+    assert client.get("/api/esign/not-a-token").status_code == 400

@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .config import get_settings
 from .data import get_dataset
 from .privacy import install_log_redaction
-from .routers import advisor, analytics, catalogue, kyc, me, orders, partner, quote, registry
+from .routers import advisor, analytics, catalogue, esign, kyc, me, orders, partner, quote, registry
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 install_log_redaction()
@@ -18,7 +18,7 @@ settings = get_settings()
 app = FastAPI(title="Accel UdyamSync API", version="1.0.0", description="Digital-first MSME onboarding: advisor, OneBill quote, Smart KYC, tracker, partner co-pilot.")
 app.add_middleware(CORSMiddleware, allow_origins=list(settings.cors_origins), allow_methods=["*"], allow_headers=["*"])
 
-for r in (catalogue.router, registry.router, advisor.router, quote.router, kyc.router, me.router, orders.router, partner.router, analytics.router):
+for r in (catalogue.router, registry.router, advisor.router, quote.router, kyc.router, me.router, orders.router, partner.router, analytics.router, esign.router):
     app.include_router(r)
 
 

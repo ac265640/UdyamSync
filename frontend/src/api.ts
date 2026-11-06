@@ -66,6 +66,7 @@ export type Profile = {
   current_spend?: number | null
   needs: string[]
   fibre_feasible: boolean
+  site_list?: { name: string; pincode: string; fibre: boolean }[]
   source: string
   prefilled_from?: string[]
 }
@@ -158,7 +159,7 @@ export const api = {
   resume: (sid: string) => req<AdvisorResponse>(`/api/advisor/sessions/${sid}`),
   send: (sid: string, text: string) => post<AdvisorResponse>(`/api/advisor/sessions/${sid}/messages`, { text }),
   select: (sid: string, tier?: string, term_months?: number) => post<AdvisorResponse>(`/api/advisor/sessions/${sid}/select`, { tier, term_months }),
-  patchProfile: (sid: string, body: Partial<Profile>) => req<AdvisorResponse>(`/api/advisor/sessions/${sid}/profile`, { method: 'PATCH', body: JSON.stringify(body) }),
+  patchProfile: (sid: string, body: Partial<Profile> | { site_list: { name: string; pincode: string }[] }) => req<AdvisorResponse>(`/api/advisor/sessions/${sid}/profile`, { method: 'PATCH', body: JSON.stringify(body) }),
   eval: () => req<{ total: number; passed: number; pass_rate: number; results: { id: string; lang: string; passed: boolean; failures: string[]; tier: string; monthly: number }[] }>('/api/advisor/eval'),
   catalogue: () => req<{ id: string; name: string; category: string; description: string; unit: string; price_min: number; price_max: number; setup_fee: number; requires_gstin: boolean; requires_one_of: string[]; install_days: number }[]>('/api/catalogue'),
   quote: (session_id: string, lines: { product_id: string; quantity: number }[], term_months: number) => post<Quote>('/api/quote', { session_id, lines, term_months }),
@@ -195,6 +196,11 @@ export const api = {
   compliance: () => req<Compliance>('/api/analytics/compliance'),
   segments: () => req<Segment[]>('/api/analytics/segments'),
   live: () => req<{ funnel: Record<string, number>; avg_minutes_to_order: number | null; handoffs: number; orders_live: number; by_lang: Record<string, number>; by_channel: Record<string, number>; llm: { provider: string; calls: number; failures: number } }>('/api/analytics/live'),
+  feasibility: (pincode: string) => req<{ pincode: string; valid: boolean; fibre?: boolean; technology?: string; install_days?: number; message: string }>(`/api/catalogue/feasibility/${pincode}`),
+  sendEsign: (session_id: string, name: string, phone: string) => post<{ token: string; path: string; status: string; phone_masked: string }>('/api/esign/links', { session_id, name, phone }),
+  esignStatus: (sid: string) => req<{ status: string; name: string; phone_masked: string; certificate_ref?: string }>(`/api/esign/status/${sid}`),
+  esignView: (token: string) => req<{ business: string; city: string; signatory: string; status: string; monthly: number; setup: number; term_months: number; lines: string[] }>(`/api/esign/${token}`),
+  esignSign: (token: string, otp: string) => post<{ status: string; certificate_ref: string }>(`/api/esign/${token}/sign`, { otp }),
   myData: (sid: string) => req<MyData>(`/api/me/${sid}`),
   erase: (sid: string) => post<{ erased: boolean; files_deleted: number }>(`/api/me/${sid}/erase`),
 }

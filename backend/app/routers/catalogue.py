@@ -17,6 +17,13 @@ def list_cities() -> list[dict]:
     return [{"city": c, "tier": t, "state": ds.city_state[c]} for c, t in sorted(ds.city_tier.items())]
 
 
+@router.get("/feasibility/{pincode}")
+def feasibility(pincode: str) -> dict:
+    from ..feasibility import check
+
+    return check(pincode)
+
+
 @router.get("/{product_id}/eligibility")
 def eligibility(product_id: str, city_tier: int = 2, employees: int = 1, sites: int = 1, gstin_status: str = "none") -> dict:
     p = get_dataset().products.get(product_id.upper())

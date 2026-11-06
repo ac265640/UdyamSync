@@ -32,6 +32,7 @@ class ProfileIn(BaseModel):
     pincode: str | None = Field(None, pattern=r"^[1-9]\d{5}$")
     current_spend: int | None = Field(None, ge=0)
     needs: list[str] | None = None
+    site_list: list[dict] | None = None
 
 
 @router.get("/meta")

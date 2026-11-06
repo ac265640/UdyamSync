@@ -2,10 +2,11 @@ import { ArrowLeft, ArrowRight, Link2, Lock, Minus, Plus, Printer, Share2, Trend
 import { useEffect, useMemo, useState } from 'react'
 import { api, fmtDate, inr, type AdvisorResponse, type Quote } from '../api'
 import { Spinner } from '../components/ui'
+import Sites from './Sites'
 
 type Product = Awaited<ReturnType<typeof api.catalogue>>[number]
 
-export default function OneBill({ state, onBack, onContinue }: { state: AdvisorResponse; onBack: () => void; onContinue: () => void }) {
+export default function OneBill({ state, onState, onBack, onContinue }: { state: AdvisorResponse; onState: (s: AdvisorResponse) => void; onBack: () => void; onContinue: () => void }) {
   const rec = state.recommendation
   const tierName = state.selected_tier || rec?.default_tier || 'recommended'
   const base = rec?.tiers[tierName]
@@ -17,6 +18,10 @@ export default function OneBill({ state, onBack, onContinue }: { state: AdvisorR
   const [busy, setBusy] = useState(false)
 
   useEffect(() => { api.catalogue().then(setCatalogue) }, [])
+  // When the sites change the advisor re-recommends: start the bill again from its new bundle.
+  useEffect(() => {
+    if (base) setLines(Object.fromEntries(base.lines.filter((l) => l.added_by !== 'dependency').map((l) => [l.product_id, l.quantity])))
+  }, [base])
   useEffect(() => {
     const t = setTimeout(() => {
       setBusy(true)
@@ -45,6 +50,8 @@ export default function OneBill({ state, onBack, onContinue }: { state: AdvisorR
         </div>
         <h2 className="mt-2 text-lg font-bold text-ink">Your OneBill</h2>
         <p className="text-xs text-muted">One monthly price · one bill · one support number. Switch things on or off — the price updates instantly.</p>
+
+        <Sites state={state} onState={onState} />
 
         <div className="mt-3 flex gap-1 rounded-xl bg-paper p-1 text-xs font-semibold">
           {[6, 12, 24].map((t) => (

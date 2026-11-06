@@ -48,7 +48,7 @@ A grievance officer contact is in the notice, with a 7-day response time.
 - Partner views are restricted by role.
 - The AI is guarded against prompt injection, and any ₹ amount it invents is discarded.
 - Secrets live only in `.env`, never in the repo.
-- The CI runs 63 tests, including consent-chain tamper detection, encryption at rest and erasure.
+- The CI runs 65 tests, including consent-chain tamper detection, encryption at rest and erasure.
 
 **Prototype honesty.**
 - The registries, DigiLocker, e-sign, UPI AutoPay and the WhatsApp Business API are simulated.

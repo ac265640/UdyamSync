@@ -54,6 +54,7 @@ class Profile:
     current_vendor_count: int | None = None
     needs: list[str] = field(default_factory=list)
     fibre_feasible: bool = True
+    site_list: list[dict] = field(default_factory=list)  # [{name, pincode, fibre}]
     source: str = "Website form"
     prefilled_from: list[str] = field(default_factory=list)
 
