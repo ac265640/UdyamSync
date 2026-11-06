@@ -1,0 +1,19 @@
+services:
+  api:
+    build: ./backend
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATA_DIR: /data
+      CORS_ORIGINS: http://localhost:8080
+    volumes:
+      - ./data:/data:ro
+      - udyamsync-var:/var/udyamsync
+    expose: ["8000"]
+  web:
+    build: ./frontend
+    ports: ["8080:80"]
+    depends_on: [api]
+volumes:
+  udyamsync-var:
