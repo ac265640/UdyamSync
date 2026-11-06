@@ -1,82 +1,145 @@
-import { ArrowRight, BarChart3, FileSearch, MessageCircle, ShieldCheck, Smartphone, Users } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, FileLock2, Fingerprint, MessageCircle, Phone as PhoneIcon, ScrollText, Timer } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { api, inr, type Baseline, type Replay } from '../api'
-import { useBrand } from '../brand'
+import { api, inr, type InboxLead, type Replay } from '../api'
+import ScrollReveal from '../bits/ScrollReveal'
+import Board from '../landing/Board'
+import Chapters from '../landing/Chapters'
+import HeroPhone from '../landing/HeroPhone'
 
-const ENTRIES = [
-  { to: '/start?new=1', icon: Smartphone, title: 'Owner app', text: 'Chat or speak in Hindi, get a bundle with one clear price, verify in 2 minutes, track your order.', cta: 'Start as a shop owner' },
-  { to: '/whatsapp', icon: MessageCircle, title: 'On WhatsApp', text: 'The same advisor inside a WhatsApp chat — quick replies, voice notes, quote card.', cta: 'Open WhatsApp view' },
-  { to: '/partner', icon: Users, title: 'Partner Co-Pilot', text: 'Leads the advisor could not close, ranked by win-back score with the next best action. Assisted mode keeps partners earning.', cta: 'Open cockpit' },
-  { to: '/insights', icon: BarChart3, title: 'Insights', text: 'Replay the quarter: run the real 5,000 leads through UdyamSync and see conversion, cost and churn move.', cta: 'See the impact' },
-  { to: '/kyc-inspector', icon: FileSearch, title: 'KYC Inspector', text: 'Run the 12 specimen applicants through Smart KYC and watch every planted problem get caught.', cta: 'Inspect K01–K12' },
-  { to: '/privacy', icon: ShieldCheck, title: 'Privacy by design', text: 'DPDP consent ledger, masking, encryption, auto-purge and a "My Data" page the owner controls.', cta: 'Read the note' },
+const LANGS: [string, string][] = [['hi', 'हिन्दी'], ['en', 'English'], ['mr', 'मराठी'], ['gu', 'ગુજરાતી'], ['ta', 'தமிழ்'], ['te', 'తెలుగు'], ['kn', 'ಕನ್ನಡ'], ['bn', 'বাংলা'], ['ml', 'മലയാളം'], ['pa', 'ਪੰਜਾਬੀ']]
+
+const PRIVACY: [typeof Timer, string, string][] = [
+  [Fingerprint, 'No Aadhaar number, ever', 'DigiLocker and e-sign return a yes and a reference. The number never reaches us.'],
+  [FileLock2, 'Read on our own server', "Document photos are read in-house and encrypted. No third-party AI sees them."],
+  [Timer, 'Deleted on a timer', 'Images are purged 30 days after verification. Masked fields stay for the contract.'],
+  [ScrollText, 'Consent you can audit', 'Every grant and withdrawal is hash-chained to the exact notice you read.'],
 ]
 
 export default function Home() {
-  const { name } = useBrand()
-  const [b, setB] = useState<Baseline | null>(null)
   const [r, setR] = useState<Replay | null>(null)
-  useEffect(() => { api.baseline().then(setB); api.replay({}).then(setR) }, [])
+  const [leads, setLeads] = useState<InboxLead[]>([])
+  useEffect(() => {
+    api.replay({}).then(setR).catch(() => {})
+    api.inbox({ limit: 4, segment: 'prof' }).then((x) => setLeads(x.historical)).catch(() => {})
+  }, [])
+
   return (
     <div>
-      <section className="bg-brand text-white">
-        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 lg:grid-cols-2 lg:py-16">
-          <div>
-            <div className="pill bg-white/15 text-white">{name} · Project Udyam Digital</div>
-            <h1 className="mt-4 text-4xl font-extrabold leading-tight sm:text-5xl">Ek baar mein<br />vyapar digital.</h1>
-            <p className="mt-4 max-w-xl text-lg text-white/80">A small business owner goes from "what do I need?" to "my order is verified and scheduled" in one 10-minute sitting — on a phone, in their own language. Partners stay in the loop and keep their commission.</p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link to="/start?new=1&lang=hi" className="btn bg-white text-brand">शुरू करें (Hindi) <ArrowRight size={16} /></Link>
-              <Link to="/start?new=1&lang=en" className="btn bg-white/15 text-white ring-1 ring-white/30">Start in English</Link>
-            </div>
+      {/* hero */}
+      <section className="mx-auto grid min-h-[calc(100svh-4rem)] max-w-[1240px] items-center gap-12 px-5 py-14 sm:px-8 lg:grid-cols-[1.15fr_1fr] lg:py-10">
+        <div>
+          <h1 className="display text-[clamp(2.9rem,6.4vw,5.6rem)] font-medium">
+            Get your business online <em className="font-normal italic text-brand">in one sitting.</em>
+          </h1>
+          <p className="lede mt-6">
+            Internet, business mobiles, WhatsApp, CCTV and cloud for India's small businesses. A three-question advisor in your language picks the bundle, prices it on one line, verifies you in two minutes and tracks the install to the day.
+          </p>
+          <p className="mt-5 text-[0.95rem] font-medium text-ink">Ordered the same day, not 17.6 days and three follow-up calls later.</p>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Link to="/start?new=1&lang=hi" className="btn-primary !px-5 !py-3.5 text-base" lang="hi">हिन्दी में शुरू करें <ArrowRight size={17} /></Link>
+            <Link to="/start?new=1&lang=en" className="btn-ghost !px-5 !py-3.5 text-base">Start in English</Link>
           </div>
-          <div className="grid grid-cols-2 gap-3 self-center">
-            <Kpi label="Lead → activation" before={b ? `${b.conversion_pct}%` : '…'} after={r ? `${r.after.conversion_pct}%` : '…'} />
-            <Kpi label="Days to activate" before={b ? `${b.avg_days_to_activate}` : '…'} after={r ? `${r.after.days_to_activate}` : '…'} />
-            <Kpi label="Cost per activation" before={b ? inr(b.cac_per_activation) : '…'} after={r ? inr(r.after.cac) : '…'} />
-            <Kpi label="6-month churn" before={b ? `${b.churn_6m_pct}%` : '…'} after={r ? `${r.after.churn_6m_pct}%` : '…'} />
-            <p className="col-span-2 text-xs text-white/60">Before = the case's 5,000 real (synthetic) leads, Apr–Jun 2026. After = the same leads replayed through UdyamSync with conservative, adjustable assumptions — see Insights.</p>
-          </div>
+          <Link to="/partner" className="link mt-6 inline-flex items-center gap-1 text-sm text-muted">Are you an Accel partner? Open the Co-Pilot <ArrowUpRight size={14} /></Link>
         </div>
+        <div className="lg:justify-self-end lg:pr-6"><HeroPhone /></div>
       </section>
-      <section className="mx-auto max-w-7xl px-4 py-10">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {ENTRIES.map((e) => (
-            <Link key={e.to} to={e.to} className="card group p-5 transition hover:-translate-y-0.5 hover:shadow-md">
-              <e.icon className="text-brand" />
-              <h3 className="mt-3 font-semibold text-slate-900">{e.title}</h3>
-              <p className="mt-1 text-sm text-slate-600">{e.text}</p>
-              <div className="mt-3 flex items-center gap-1 text-sm font-semibold text-brand">{e.cta} <ArrowRight size={14} className="transition group-hover:translate-x-0.5" /></div>
-            </Link>
-          ))}
-        </div>
-        <div className="mt-10 grid gap-4 md:grid-cols-4">
-          {[
-            ['1 · Discover', '3 questions in Hindi, English, Marathi + 7 more. GSTIN fills half the answers from the registry.'],
-            ['2 · OneBill', 'Essential / Recommended / Pro, one monthly price, toggles, dependencies handled, no product codes.'],
-            ['3 · Smart KYC', 'Photos → OCR → registry checks → plain-language fixes. DigiLocker, e-sign, consent ledger.'],
-            ['4 · Track', '5-stage tracker with ETAs, technician, reschedule, WhatsApp updates. No chase calls.'],
-          ].map(([t, d]) => (
-            <div key={t} className="rounded-2xl bg-white p-4 ring-1 ring-slate-200">
-              <div className="text-sm font-bold text-brand">{t}</div>
-              <div className="mt-1 text-sm text-slate-600">{d}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-    </div>
-  )
-}
 
-function Kpi({ label, before, after }: { label: string; before: string; after: string }) {
-  return (
-    <div className="rounded-2xl bg-white/10 p-4 ring-1 ring-white/15">
-      <div className="text-xs uppercase tracking-wide text-white/60">{label}</div>
-      <div className="mt-1 flex items-baseline gap-2">
-        <span className="text-sm text-white/50 line-through">{before}</span>
-        <span className="text-2xl font-bold">{after}</span>
-      </div>
+      {/* statement — scroll moment 1 */}
+      <section className="border-y border-line bg-surface">
+        <div className="mx-auto max-w-[1240px] px-5 py-28 sm:px-8 lg:py-40">
+          <ScrollReveal baseOpacity={0.14} enableBlur={false} baseRotation={0} splitBy="words" mode="scrub" containerClassName="max-w-5xl" textClassName="display !text-[clamp(1.9rem,4vw,3.4rem)] !leading-[1.12] !font-normal">
+            Today a clinic owner waits 17.6 days, chases us three times and costs ₹15,053 to win. Ninety-three of every hundred interested businesses give up before they are switched on.
+          </ScrollReveal>
+          <p className="mt-10 text-sm text-muted">Source: the case's 5,000 leads, April to June 2026.</p>
+        </div>
+      </section>
+
+      {/* pinned chapters — scroll moment 2 */}
+      <Chapters />
+
+      {/* proof — the station board is the page's one count */}
+      <section className="border-t border-line bg-surface">
+        <div className="mx-auto grid max-w-[1240px] items-center gap-12 px-5 py-24 sm:px-8 lg:grid-cols-[1fr_1.25fr] lg:py-32">
+          <div>
+            <h2 className="display text-[clamp(2.2rem,4vw,3.4rem)]">The same quarter, replayed</h2>
+            <p className="lede mt-5">We ran all 5,000 real leads back through UdyamSync. Each drop reason is won back only by the feature that removes it, at deliberately cautious rates. Every assumption is a slider you can move.</p>
+            {r && <p className="mt-4 text-[0.95rem] text-ink">That is <b className="num">+{r.impact.extra_activations_per_quarter.toLocaleString('en-IN')}</b> businesses switched on every quarter, about <b className="num">{inr(r.impact.extra_annual_recurring_revenue_inr / 1e7)} crore</b> a year in new recurring revenue.</p>}
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link to="/insights" className="btn-ink">Move the assumptions <ArrowRight size={16} /></Link>
+              <Link to="/kyc-inspector" className="btn-ghost">Watch KYC catch the 12 specimens</Link>
+            </div>
+          </div>
+          <Board r={r} />
+        </div>
+      </section>
+
+      {/* partners */}
+      <section className="mx-auto grid max-w-[1240px] items-center gap-12 px-5 py-24 sm:px-8 lg:grid-cols-[1.2fr_1fr] lg:py-32">
+        <div className="order-2 lg:order-1">
+          <div className="card overflow-hidden">
+            <div className="flex items-center justify-between border-b border-line px-5 py-3 text-sm">
+              <span className="font-semibold">Win-back queue · Professional offices</span>
+              <span className="text-muted">ranked by score</span>
+            </div>
+            <ul className="divide-y divide-line">
+              {(leads.length ? leads : [null, null, null, null]).map((l, i) => (
+                <li key={l?.id ?? i} className="flex items-center gap-4 px-5 py-3.5">
+                  {l ? (
+                    <>
+                      <span className="display num w-9 text-2xl">{l.score}</span>
+                      <div className="min-w-0 flex-1">
+                        <div className="truncate text-sm font-semibold">{l.business} <span className="font-normal text-muted">· {l.city}</span></div>
+                        <div className="truncate text-xs text-muted">Dropped: {l.reason}</div>
+                      </div>
+                      <span className="flex items-center gap-1.5 rounded-full bg-paper px-2.5 py-1 text-xs font-medium">
+                        {l.next_action.channel === 'whatsapp' ? <MessageCircle size={13} className="text-leaf" /> : <PhoneIcon size={13} />}
+                        {l.next_action.channel === 'whatsapp' ? 'Send quote' : 'Call'}
+                      </span>
+                    </>
+                  ) : <div className="h-9 w-full animate-pulse rounded bg-line/40" />}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <div className="order-1 lg:order-2">
+          <h2 className="display text-[clamp(2.2rem,4vw,3.4rem)]">Partners stay in the deal</h2>
+          <p className="lede mt-5">Leads the advisor can't close go to the local partner, ranked by a model trained on last quarter, each with the chat summary and the next best action. Partners can run the same flow on a tablet at the counter, and their commission is credited automatically.</p>
+          <Link to="/partner" className="btn-ghost mt-8">Open the Partner Co-Pilot <ArrowRight size={16} /></Link>
+        </div>
+      </section>
+
+      {/* privacy */}
+      <section className="border-y border-line bg-surface">
+        <div className="mx-auto grid max-w-[1240px] gap-12 px-5 py-24 sm:px-8 lg:grid-cols-[1fr_1.1fr] lg:py-32">
+          <div>
+            <h2 className="display text-[clamp(2.2rem,4vw,3.4rem)]">KYC without handing over your life</h2>
+            <p className="lede mt-5">Built for the DPDP Act from the first screen: consent per purpose, nothing collected that a step does not need, and a page where the owner sees, downloads or erases everything we hold.</p>
+            <Link to="/privacy" className="link mt-6 inline-flex items-center gap-1 text-sm font-medium">Read the one-page privacy note <ArrowUpRight size={14} /></Link>
+          </div>
+          <ul className="grid gap-px overflow-hidden rounded-[14px] bg-line shadow-[inset_0_0_0_1px_var(--color-line)] sm:grid-cols-2">
+            {PRIVACY.map(([Icon, t, d]) => (
+              <li key={t} className="bg-surface p-6">
+                <Icon size={20} className="text-brand" />
+                <div className="mt-3 font-semibold">{t}</div>
+                <p className="mt-1 text-sm leading-relaxed text-muted">{d}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* close */}
+      <section className="mx-auto max-w-[1240px] px-5 py-28 text-center sm:px-8 lg:py-36">
+        <h2 className="display mx-auto max-w-3xl text-[clamp(2.4rem,5vw,4.4rem)]">Start in the language you think in</h2>
+        <p className="lede mx-auto mt-5">Ten languages. Type, tap or speak. About ten minutes from hello to a verified order.</p>
+        <div className="mx-auto mt-10 flex max-w-3xl flex-wrap justify-center gap-2.5">
+          {LANGS.map(([k, v]) => (
+            <Link key={k} to={`/start?new=1&lang=${k}`} lang={k} className="chip bg-surface text-[1rem] shadow-[inset_0_0_0_1px_var(--color-line)] hover:bg-brand hover:text-white hover:shadow-none">{v}</Link>
+          ))}
+        </div>
+      </section>
     </div>
   )
 }

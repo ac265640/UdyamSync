@@ -95,10 +95,10 @@ export default function Journey() {
             <div className="flex items-center justify-between gap-2">
               <div className="text-sm font-semibold">Vyapar Saathi</div>
               <div className="flex items-center gap-2">
-                <select value={lang} onChange={(e) => restart(e.target.value)} className="rounded-lg bg-white/15 px-2 py-1 text-xs text-white outline-none" aria-label="Language">
-                  {Object.entries(LANGS).map(([k, v]) => <option key={k} value={k} className="text-slate-900">{v}</option>)}
+                <select value={lang} onChange={(e) => restart(e.target.value)} className="rounded-lg bg-surface/15 px-2 py-1 text-xs text-white outline-none" aria-label="Language">
+                  {Object.entries(LANGS).map(([k, v]) => <option key={k} value={k} className="text-ink">{v}</option>)}
                 </select>
-                <button onClick={() => restart()} className="rounded-lg bg-white/15 px-2 py-1 text-xs">New</button>
+                <button onClick={() => restart()} className="rounded-lg bg-surface/15 px-2 py-1 text-xs">New</button>
               </div>
             </div>
             <ol className="mt-3 flex items-center gap-1">
@@ -107,7 +107,7 @@ export default function Journey() {
                   <button
                     disabled={i > idx}
                     onClick={() => i <= idx && go(s.key)}
-                    className={`flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-bold ${i < idx ? 'bg-white text-brand' : i === idx ? 'bg-brand-2 text-white ring-2 ring-white' : 'bg-white/20 text-white/70'}`}
+                    className={`flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-bold ${i < idx ? 'bg-surface text-brand' : i === idx ? 'bg-haldi text-white ring-2 ring-white' : 'bg-surface/20 text-white/70'}`}
                   >
                     {i < idx ? <Check size={14} /> : i + 1}
                   </button>
@@ -126,13 +126,13 @@ export default function Journey() {
             {saved.step === 'track' && (order ? <Tracker order={order} onChange={setOrder} /> : <div className="p-6"><Spinner label="Loading your order…" /></div>)}
           </div>
         </div>
-        <p className="mt-2 text-center text-[11px] text-slate-400">Progress is saved on this device — close the app and continue anytime.</p>
+        <p className="mt-2 text-center text-[11px] text-faint">Progress is saved on this device — close the app and continue anytime.</p>
       </div>
 
       <aside className="hidden space-y-4 lg:block">
         <div className="card p-5">
-          <h3 className="text-sm font-semibold text-slate-900">What the advisor understood</h3>
-          <p className="text-xs text-slate-500">Updates live as you chat. {p.prefilled_from?.length ? `Auto-filled from ${p.prefilled_from.join(' + ')}.` : 'Type a GSTIN to auto-fill from the registry.'}</p>
+          <h3 className="text-sm font-semibold text-ink">What the advisor understood</h3>
+          <p className="text-xs text-muted">Updates live as you chat. {p.prefilled_from?.length ? `Auto-filled from ${p.prefilled_from.join(' + ')}.` : 'Type a GSTIN to auto-fill from the registry.'}</p>
           <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
             <Fact icon={<Building2 size={15} />} label="Business" value={p.business_name || p.business_type} badge={p.prefilled_from?.includes('GST registry') ? 'GST' : undefined} />
             <Fact label="Segment" value={p.segment_name} />
@@ -144,10 +144,10 @@ export default function Journey() {
             <Fact label="Needs" value={p.needs?.length ? p.needs.join(', ').replace(/_/g, ' ') : null} />
           </dl>
         </div>
-        <div className="card flex gap-3 p-5 text-sm text-slate-600">
-          <ShieldCheck className="shrink-0 text-emerald-600" />
+        <div className="card flex gap-3 p-5 text-sm text-muted">
+          <ShieldCheck className="shrink-0 text-leaf" />
           <div>
-            <div className="font-semibold text-slate-900">Your data, your control</div>
+            <div className="font-semibold text-ink">Your data, your control</div>
             We only ask what each step needs. Identifiers are masked on screen and in logs, raw GSTIN is stored encrypted, document images are deleted after verification, and you can see or erase everything from <a className="text-brand underline" href={`/my-data/${saved.sid}`}>My Data</a>.
           </div>
         </div>
@@ -159,9 +159,9 @@ export default function Journey() {
 function Fact({ label, value, icon, badge, warn }: { label: string; value?: string | null; icon?: React.ReactNode; badge?: string; warn?: boolean }) {
   return (
     <div>
-      <dt className="flex items-center gap-1 text-[11px] font-medium uppercase tracking-wide text-slate-400">{icon}{label}</dt>
-      <dd className={`mt-0.5 font-medium ${value ? (warn ? 'text-rose-600' : 'text-slate-800') : 'text-slate-300'}`}>
-        {value || '—'} {badge && <span className="pill ml-1 bg-emerald-50 text-emerald-700">from {badge}</span>}
+      <dt className="flex items-center gap-1 text-[11px] font-medium uppercase tracking-wide text-faint">{icon}{label}</dt>
+      <dd className={`mt-0.5 font-medium ${value ? (warn ? 'text-rose-600' : 'text-ink') : 'text-line-strong'}`}>
+        {value || '—'} {badge && <span className="pill ml-1 bg-[#e7f2ea] text-leaf">from {badge}</span>}
       </dd>
     </div>
   )

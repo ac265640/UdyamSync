@@ -35,9 +35,9 @@ export default function Kyc({ sid, onBack, onContinue }: { sid: string; lang: st
   return (
     <div className="flex h-[34rem] flex-col">
       <div className="flex-1 overflow-y-auto px-4 py-4">
-        <button onClick={onBack} className="flex items-center gap-1 text-xs text-slate-500"><ArrowLeft size={14} /> OneBill</button>
+        <button onClick={onBack} className="flex items-center gap-1 text-xs text-muted"><ArrowLeft size={14} /> OneBill</button>
         <h2 className="mt-2 text-lg font-bold">Verify your business</h2>
-        <p className="text-xs text-slate-500">Take photos with your phone. We read them instantly, check them against the GST & Udyam registries, and tell you exactly what to fix.</p>
+        <p className="text-xs text-muted">Take photos with your phone. We read them instantly, check them against the GST & Udyam registries, and tell you exactly what to fix.</p>
 
         <div className="mt-3 space-y-2">
           {SLOTS.map((s) => (
@@ -49,12 +49,12 @@ export default function Kyc({ sid, onBack, onContinue }: { sid: string; lang: st
           ))}
         </div>
 
-        <details className="mt-3 rounded-xl bg-slate-50 p-3 text-xs text-slate-600 ring-1 ring-slate-200">
-          <summary className="cursor-pointer font-semibold text-slate-700">Demo: load a specimen applicant (K01–K12)</summary>
+        <details className="mt-3 rounded-xl bg-paper p-3 text-xs text-muted ring-1 ring-line">
+          <summary className="cursor-pointer font-semibold text-ink">Demo: load a specimen applicant (K01–K12)</summary>
           <p className="mt-1">Loads the case pack's documents as if you photographed them — some have planted problems.</p>
           <div className="mt-2 grid grid-cols-6 gap-1">
             {Array.from({ length: 12 }, (_, i) => `K${String(i + 1).padStart(2, '0')}`).map((k) => (
-              <button key={k} onClick={() => run('sample', () => api.useSample(sid, k))} className="rounded-lg bg-white py-1 font-mono ring-1 ring-slate-200 hover:ring-[var(--brand)]">{k}</button>
+              <button key={k} onClick={() => run('sample', () => api.useSample(sid, k))} className="rounded-lg bg-surface py-1 font-mono ring-1 ring-line hover:ring-[var(--brand)]">{k}</button>
             ))}
           </div>
         </details>
@@ -68,15 +68,22 @@ export default function Kyc({ sid, onBack, onContinue }: { sid: string; lang: st
               <h3 className="text-sm font-semibold">Verification result</h3>
               <Verdict verdict={r.verdict} label={r.verdict_label} />
             </div>
+            <div className="flex justify-center py-3" aria-hidden>
+              {r.verdict === 'action_needed' ? (
+                <div key="fix" className="stamp stamp-in text-[17px] text-khata"><span lang="hi" className="text-[14px] normal-case tracking-normal">सुधार करें</span>Fix &amp; resend</div>
+              ) : (
+                <div key="ok" className="stamp stamp-in text-[17px] text-leaf"><span lang="hi" className="text-[14px] normal-case tracking-normal">सत्यापित</span>Verified</div>
+              )}
+            </div>
             <ul className="mt-2 space-y-1.5">
               {[...r.checks].sort((a, b) => ['fail', 'warn', 'pass'].indexOf(a.status) - ['fail', 'warn', 'pass'].indexOf(b.status)).map((c) => (
-                <li key={c.id} className={`rounded-xl p-2.5 text-xs ring-1 ${c.status === 'fail' ? 'bg-rose-50 ring-rose-200' : c.status === 'warn' ? 'bg-amber-50 ring-amber-200' : 'bg-white ring-slate-200'}`}>
+                <li key={c.id} className={`rounded-xl p-2.5 text-xs ring-1 ${c.status === 'fail' ? 'bg-rose-50 ring-rose-200' : c.status === 'warn' ? 'bg-amber-50 ring-amber-200' : 'bg-surface ring-line'}`}>
                   <div className="flex gap-2">
                     <StatusIcon status={c.status} size={16} />
                     <div>
-                      <div className="font-semibold text-slate-800">{c.label}</div>
-                      <div className="text-slate-600">{c.message}</div>
-                      {c.fix && c.status !== 'pass' && <div className="mt-1 font-medium text-slate-800">👉 {c.fix}</div>}
+                      <div className="font-semibold text-ink">{c.label}</div>
+                      <div className="text-muted">{c.message}</div>
+                      {c.fix && c.status !== 'pass' && <div className="mt-1 font-medium text-ink">→ {c.fix}</div>}
                     </div>
                   </div>
                 </li>
@@ -85,11 +92,11 @@ export default function Kyc({ sid, onBack, onContinue }: { sid: string; lang: st
           </div>
         )}
       </div>
-      <div className="border-t border-slate-200 bg-white px-4 py-3">
+      <div className="border-t border-line bg-surface px-4 py-3">
         <button onClick={onContinue} disabled={!canContinue} className="btn-primary w-full">
           {canContinue ? <>Continue to e-sign &amp; pay <ArrowRight size={16} /></> : kc?.missing.length ? `Add ${kc.missing.length} more document${kc.missing.length > 1 ? 's' : ''}` : 'Fix the items above to continue'}
         </button>
-        <p className="mt-1 flex items-center justify-center gap-1 text-[10px] text-slate-400"><Lock size={10} /> Encrypted · masked · images auto-deleted after verification</p>
+        <p className="mt-1 flex items-center justify-center gap-1 text-[10px] text-faint"><Lock size={10} /> Encrypted · masked · images auto-deleted after verification</p>
       </div>
     </div>
   )
@@ -102,20 +109,20 @@ function Slot({ slot, kc, busy, onFile, onRemove, extra }: { slot: { key: string
   const worst = checks.some((c) => c.status === 'fail') ? 'fail' : checks.some((c) => c.status === 'warn') ? 'warn' : doc ? 'pass' : null
   const viaDl = slot.key === 'signatory_id' && kc?.digilocker && !doc
   return (
-    <div className="rounded-xl p-3 ring-1 ring-slate-200">
+    <div className="rounded-xl p-3 ring-1 ring-line">
       <div className="flex items-center gap-3">
-        <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${doc || viaDl ? 'bg-emerald-50' : 'bg-slate-100'}`}>
-          {worst ? <StatusIcon status={worst} /> : viaDl ? <StatusIcon status="pass" /> : <FileCheck2 size={18} className="text-slate-400" />}
+        <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${doc || viaDl ? 'bg-[#e7f2ea]' : 'bg-paper'}`}>
+          {worst ? <StatusIcon status={worst} /> : viaDl ? <StatusIcon status="pass" /> : <FileCheck2 size={18} className="text-faint" />}
         </div>
         <div className="min-w-0 flex-1">
-          <div className="text-sm font-semibold text-slate-800">{slot.label}</div>
-          <div className="truncate text-[11px] text-slate-500">
+          <div className="text-sm font-semibold text-ink">{slot.label}</div>
+          <div className="truncate text-[11px] text-muted">
             {viaDl ? 'Verified via DigiLocker' : doc ? Object.entries(doc.fields).filter(([k]) => !k.startsWith('_') && k !== 'gstin_raw').slice(0, 2).map(([, v]) => v).join(' · ') || 'Uploaded' : slot.hint}
           </div>
         </div>
         <input ref={ref} type="file" accept="image/*" capture="environment" className="hidden" onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])} />
         {doc ? (
-          <button onClick={onRemove} className="rounded-lg p-2 text-slate-400 hover:bg-slate-100" title="Remove"><Trash2 size={16} /></button>
+          <button onClick={onRemove} className="rounded-lg p-2 text-faint hover:bg-paper" title="Remove"><Trash2 size={16} /></button>
         ) : (
           <button onClick={() => ref.current?.click()} disabled={busy} className="btn-ghost !px-3 !py-1.5 text-xs"><Camera size={14} /> {busy ? '…' : 'Photo'}</button>
         )}
@@ -157,20 +164,20 @@ function Consent({ sid, onDone, onBack }: { sid: string; onDone: () => void; onB
   return (
     <div className="flex h-[34rem] flex-col">
       <div className="flex-1 overflow-y-auto px-4 py-4">
-        <button onClick={onBack} className="flex items-center gap-1 text-xs text-slate-500"><ArrowLeft size={14} /> OneBill</button>
-        <div className="mt-2 flex items-center gap-2"><ShieldCheck className="text-emerald-600" /><h2 className="text-lg font-bold">Before we verify — your consent</h2></div>
-        <p className="mt-1 text-xs text-slate-500">Under India's DPDP Act, 2023 you decide what we use. Each choice is separate; only the first is needed to activate service. Change your mind any time in My Data.</p>
+        <button onClick={onBack} className="flex items-center gap-1 text-xs text-muted"><ArrowLeft size={14} /> OneBill</button>
+        <div className="mt-2 flex items-center gap-2"><ShieldCheck className="text-leaf" /><h2 className="text-lg font-bold">Before we verify — your consent</h2></div>
+        <p className="mt-1 text-xs text-muted">Under India's DPDP Act, 2023 you decide what we use. Each choice is separate; only the first is needed to activate service. Change your mind any time in My Data.</p>
         <div className="mt-3 space-y-2">
           {Object.entries(notice.purposes).map(([k, p]) => (
-            <div key={k} className="rounded-xl p-3 ring-1 ring-slate-200">
+            <div key={k} className="rounded-xl p-3 ring-1 ring-line">
               <label className="flex items-start gap-3">
                 <input type="checkbox" className="mt-1 h-4 w-4 accent-[var(--brand)]" checked={choices[k]} disabled={p.required} onChange={(e) => setChoices({ ...choices, [k]: e.target.checked })} />
                 <div className="flex-1">
-                  <div className="text-sm font-semibold text-slate-800">{p.title} {p.required && <span className="pill bg-slate-100 text-slate-600">needed</span>}</div>
-                  <div className="text-xs text-slate-500">{p.why}</div>
+                  <div className="text-sm font-semibold text-ink">{p.title} {p.required && <span className="pill bg-paper text-muted">needed</span>}</div>
+                  <div className="text-xs text-muted">{p.why}</div>
                 </div>
               </label>
-              <details className="mt-1 pl-7 text-[11px] text-slate-500">
+              <details className="mt-1 pl-7 text-[11px] text-muted">
                 <summary className="flex cursor-pointer items-center gap-1 text-brand">Details <ChevronDown size={12} /></summary>
                 <div className="mt-1"><b>We collect:</b> {p.what.join(', ')}</div>
                 <div><b>Kept for:</b> {p.retention}</div>
@@ -179,9 +186,9 @@ function Consent({ sid, onDone, onBack }: { sid: string; onDone: () => void; onB
             </div>
           ))}
         </div>
-        <p className="mt-3 text-[11px] text-slate-400">Notice {notice.version} · {notice.controller} · Grievance officer: {notice.grievance_officer}</p>
+        <p className="mt-3 text-[11px] text-faint">Notice {notice.version} · {notice.controller} · Grievance officer: {notice.grievance_officer}</p>
       </div>
-      <div className="border-t border-slate-200 bg-white px-4 py-3">
+      <div className="border-t border-line bg-surface px-4 py-3">
         <button disabled={busy} onClick={() => { setBusy(true); api.consent(sid, choices).then(onDone).finally(() => setBusy(false)) }} className="btn-primary w-full">I agree — start verification</button>
       </div>
     </div>

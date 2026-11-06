@@ -53,6 +53,34 @@ def evaluate(refresh: bool = False) -> dict:
     return _EVAL_CACHE
 
 
+class PreviewIn(BaseModel):
+    text: str = Field(..., max_length=300)
+    lang: str = "en"
+
+
+@router.post("/preview")
+def preview(body: PreviewIn) -> dict:
+    """Stateless: understand one message and recommend, nothing stored (landing-page demo)."""
+    from ..advisor.i18n import benefit, btype_label, lang_or_default
+    from ..advisor.profile import Profile, extract, merge
+    from ..advisor.recommender import recommend
+
+    p = Profile()
+    merge(p, extract(body.text))
+    if not p.segment:
+        raise HTTPException(422, "Could not understand the business")
+    p.employees = p.employees or 3
+    p.sites = p.sites or 1
+    rec = recommend(p)
+    lang = lang_or_default(body.lang)
+    q = rec["tiers"][rec["default_tier"]]
+    return {
+        "business": btype_label(p.business_type, lang), "city": p.city, "tier": rec["default_tier"],
+        "monthly": q["monthly_total"], "days": q["full_activation_days"],
+        "lines": [{"name": l["name"], "quantity": l["quantity"], "monthly": l["monthly"], "why": benefit(l["product_id"], lang)} for l in q["lines"]],
+    }
+
+
 @router.post("/sessions")
 def start(body: StartIn) -> dict:
     return conversation.start(body.lang, body.channel, body.partner_id, body.source)

@@ -8,7 +8,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     document.documentElement.dataset.theme = brand
     localStorage.setItem('brand', brand)
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', brand === 'airtel' ? '#E40000' : '#0B1F4B')
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', brand === 'airtel' ? '#E40000' : '#0F5E6E')
   }, [brand])
   return <Ctx.Provider value={{ brand, setBrand, name: brand === 'airtel' ? 'Airtel Business' : 'Accel Business' }}>{children}</Ctx.Provider>
 }

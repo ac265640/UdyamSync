@@ -58,8 +58,8 @@ export default function Insights() {
   return (
     <div className="mx-auto max-w-7xl space-y-5 px-4 py-6">
       <div>
-        <h1 className="text-2xl font-bold">Replay the Quarter</h1>
-        <p className="max-w-3xl text-sm text-slate-600">We take the case's real 5,000 leads (Apr–Jun 2026), and for every lead that dropped we ask: <i>would the UdyamSync feature that removes this drop reason have won it back?</i> Every assumption is a slider below. Nothing is a typed-in "projection".</p>
+        <h1 className="display text-[2.6rem]">Replay the Quarter</h1>
+        <p className="max-w-3xl text-sm text-muted">We take the case's real 5,000 leads (Apr–Jun 2026), and for every lead that dropped we ask: <i>would the UdyamSync feature that removes this drop reason have won it back?</i> Every assumption is a slider below. Nothing is a typed-in "projection".</p>
       </div>
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
@@ -68,9 +68,9 @@ export default function Insights() {
           const good = x.better === 'up' ? after > before : after < before
           return (
             <div key={x.k} className="card p-4">
-              <div className="text-[11px] font-medium uppercase tracking-wide text-slate-500">{x.label}</div>
-              <div className="mt-1 text-2xl font-bold text-slate-900">{x.fmt(after)}</div>
-              <div className="text-xs text-slate-500">today {x.fmt(before)} <span className={good ? 'text-[#006300]' : 'text-rose-600'}>{good ? '▲ better' : '▼ worse'}</span></div>
+              <div className="text-[11px] font-medium uppercase tracking-wide text-muted">{x.label}</div>
+              <div className="mt-1 text-2xl font-bold text-ink">{x.fmt(after)}</div>
+              <div className="text-xs text-muted">today {x.fmt(before)} <span className={good ? 'text-[#006300]' : 'text-rose-600'}>{good ? '▲ better' : '▼ worse'}</span></div>
             </div>
           )
         })}
@@ -92,11 +92,11 @@ export default function Insights() {
             </ResponsiveContainer>
           </div>
           <div className="mt-3 grid gap-3 sm:grid-cols-3">
-            <div className="rounded-xl bg-slate-50 p-3 text-sm"><div className="text-xs text-slate-500">Extra activations / quarter</div><div className="text-xl font-bold">+{r.impact.extra_activations_per_quarter.toLocaleString('en-IN')}</div></div>
-            <div className="rounded-xl bg-slate-50 p-3 text-sm"><div className="text-xs text-slate-500">Extra annual recurring revenue</div><div className="text-xl font-bold">{inr(r.impact.extra_annual_recurring_revenue_inr / 1e7)} Cr</div></div>
-            <div className="rounded-xl bg-slate-50 p-3 text-sm"><div className="text-xs text-slate-500">NPS (from chase-call link)</div><div className="text-xl font-bold">{r.before.nps} → {r.after.nps}</div></div>
+            <div className="rounded-xl bg-paper p-3 text-sm"><div className="text-xs text-muted">Extra activations / quarter</div><div className="text-xl font-bold">+{r.impact.extra_activations_per_quarter.toLocaleString('en-IN')}</div></div>
+            <div className="rounded-xl bg-paper p-3 text-sm"><div className="text-xs text-muted">Extra annual recurring revenue</div><div className="text-xl font-bold">{inr(r.impact.extra_annual_recurring_revenue_inr / 1e7)} Cr</div></div>
+            <div className="rounded-xl bg-paper p-3 text-sm"><div className="text-xs text-muted">NPS (from chase-call link)</div><div className="text-xl font-bold">{r.before.nps} → {r.after.nps}</div></div>
           </div>
-          <ul className="mt-3 list-disc space-y-0.5 pl-5 text-xs text-slate-500">{r.assumptions.notes.map((n) => <li key={n}>{n}</li>)}</ul>
+          <ul className="mt-3 list-disc space-y-0.5 pl-5 text-xs text-muted">{r.assumptions.notes.map((n) => <li key={n}>{n}</li>)}</ul>
         </Section>
 
         <Section title="Assumptions (drag to stress-test)" right={<button onClick={() => { setRec(Object.fromEntries(b.drops.map((d) => [d.reason, d.default_recovery]))); setCalls(0.5); setAvoid(40); setPlatform(40) }} className="btn-ghost !px-2 !py-1 text-xs"><RotateCcw size={12} /> Reset</button>}>
@@ -106,7 +106,7 @@ export default function Insights() {
             <Slider label="Platform cost per lead (AI, OCR, hosting)" value={platform} min={0} max={300} step={10} fmt={(v) => `₹${v}`} onChange={setPlatform} />
             {['Lead', 'Contacted', 'Needs assessed', 'Quote accepted', 'KYC complete'].filter((st) => byStage[st]).map((stage) => [stage, byStage[stage]] as const).map(([stage, ds]) => (
               <div key={stage}>
-                <div className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">Dropped at: {stage}</div>
+                <div className="mb-1 text-xs font-semibold uppercase tracking-wide text-faint">Dropped at: {stage}</div>
                 {ds.map((d) => (
                   <Slider key={d.reason} label={`${d.reason} (${d.count})`} hint={d.feature ?? undefined} value={rec[d.reason] ?? 0} min={0} max={1} step={0.05} fmt={(v) => `${Math.round(v * 100)}% won back`} onChange={(v) => setRec({ ...rec, [d.reason]: v })} />
                 ))}
@@ -129,7 +129,7 @@ export default function Insights() {
               </LineChart>
             </ResponsiveContainer>
           </div>
-          <p className="text-xs text-slate-500">1 call → {b.churn_by_calls[0]?.churn_pct}% churn; 5 calls → {b.churn_by_calls.at(-1)?.churn_pct}%. Removing chase calls is a retention lever, not just a support saving.</p>
+          <p className="text-xs text-muted">1 call → {b.churn_by_calls[0]?.churn_pct}% churn; 5 calls → {b.churn_by_calls.at(-1)?.churn_pct}%. Removing chase calls is a retention lever, not just a support saving.</p>
         </Section>
 
         {c && (
@@ -137,16 +137,16 @@ export default function Insights() {
             subtitle={`${c.violating_activations} of ${c.activations_checked} activations last quarter broke a catalogue rule — sold manually without checks. UdyamSync's rules engine blocks every one of them at quote time.`}>
             <div className="grid grid-cols-2 gap-2 text-sm">
               {Object.entries(c.by_rule).map(([rule, n]) => (
-                <div key={rule} className="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2">
-                  <span className="flex items-center gap-1.5 text-slate-600"><AlertTriangle size={14} className="text-[#ec835a]" />{{ GSTIN_REQUIRED: 'Needs GSTIN, none/cancelled', CITY_TIER: 'Not sold in that city tier', MIN_EMPLOYEES: 'Below minimum team size', DEPENDENCY_UNMET: 'Missing required connectivity', MIN_SITES: 'Below minimum sites' }[rule] ?? rule}</span>
+                <div key={rule} className="flex items-center justify-between rounded-xl bg-paper px-3 py-2">
+                  <span className="flex items-center gap-1.5 text-muted"><AlertTriangle size={14} className="text-[#ec835a]" />{{ GSTIN_REQUIRED: 'Needs GSTIN, none/cancelled', CITY_TIER: 'Not sold in that city tier', MIN_EMPLOYEES: 'Below minimum team size', DEPENDENCY_UNMET: 'Missing required connectivity', MIN_SITES: 'Below minimum sites' }[rule] ?? rule}</span>
                   <b>{n}</b>
                 </div>
               ))}
             </div>
-            <div className="mt-3 flex items-center gap-2 rounded-xl bg-emerald-50 p-3 text-sm text-[#006300]"><CheckCircle2 size={16} /> Re-run through the rules engine: {c.blocked_by_rules_engine}/{c.violating_activations} blocked · {inr(c.monthly_revenue_at_risk)}/month of revenue sold on shaky ground.</div>
+            <div className="mt-3 flex items-center gap-2 rounded-xl bg-[#e7f2ea] p-3 text-sm text-[#006300]"><CheckCircle2 size={16} /> Re-run through the rules engine: {c.blocked_by_rules_engine}/{c.violating_activations} blocked · {inr(c.monthly_revenue_at_risk)}/month of revenue sold on shaky ground.</div>
             <details className="mt-2 text-xs">
               <summary className="cursor-pointer font-semibold text-brand">Show the {c.cases.length} cases</summary>
-              <ul className="mt-2 max-h-48 space-y-1 overflow-y-auto">{c.cases.map((x) => <li key={x.lead_id} className="rounded-lg bg-slate-50 px-2 py-1"><b>{x.lead_id}</b> {x.business_type}, {x.city} (GSTIN {x.gstin_status}): {x.violations.map((v) => v.message).join(' ')}</li>)}</ul>
+              <ul className="mt-2 max-h-48 space-y-1 overflow-y-auto">{c.cases.map((x) => <li key={x.lead_id} className="rounded-lg bg-paper px-2 py-1"><b>{x.lead_id}</b> {x.business_type}, {x.city} (GSTIN {x.gstin_status}): {x.violations.map((v) => v.message).join(' ')}</li>)}</ul>
             </details>
           </Section>
         )}
@@ -155,12 +155,12 @@ export default function Insights() {
       <Section title="Which segment first? — segment opportunity matrix" subtitle="From the case data. Payback = acquisition cost per activation ÷ median monthly bundle. Lead with professional offices; scale micro-retail on WhatsApp with partners.">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[48rem] text-sm">
-            <thead className="text-left text-xs uppercase tracking-wide text-slate-400"><tr><th className="py-2">#</th><th>Segment</th><th>Share of leads</th><th>Conversion</th><th>Median bundle</th><th>6-mo churn</th><th>Cost / activation</th><th>Payback</th><th>Play</th></tr></thead>
+            <thead className="text-left text-xs uppercase tracking-wide text-faint"><tr><th className="py-2">#</th><th>Segment</th><th>Share of leads</th><th>Conversion</th><th>Median bundle</th><th>6-mo churn</th><th>Cost / activation</th><th>Payback</th><th>Play</th></tr></thead>
             <tbody>
               {seg.map((s) => (
-                <tr key={s.code} className="border-t border-slate-100 align-top">
+                <tr key={s.code} className="border-t border-line align-top">
                   <td className="py-2 font-bold text-brand">{s.priority}</td><td className="font-semibold">{s.segment}</td><td>{s.share_of_leads_pct}%</td><td>{s.conversion_pct}%</td><td>{inr(s.median_mrr)}/mo</td><td>{s.churn_6m_pct}%</td><td>{inr(s.cac_per_activation)}</td>
-                  <td className={s.payback_months > 4 ? 'font-semibold text-rose-600' : 'font-semibold text-[#006300]'}>{s.payback_months} mo</td><td className="max-w-xs text-xs text-slate-600">{s.play}</td>
+                  <td className={s.payback_months > 4 ? 'font-semibold text-rose-600' : 'font-semibold text-[#006300]'}>{s.payback_months} mo</td><td className="max-w-xs text-xs text-muted">{s.play}</td>
                 </tr>
               ))}
             </tbody>
@@ -172,23 +172,23 @@ export default function Insights() {
         <Section title="Advisor test suite" subtitle="Our own scenarios (judges' scenarios are private). Every tier of every bundle must also pass the catalogue rules.">
           {ev ? (
             <>
-              <div className="text-3xl font-bold">{ev.passed}/{ev.total} <span className="text-base font-medium text-slate-500">passing</span></div>
-              <ul className="mt-2 max-h-48 space-y-1 overflow-y-auto text-xs">{ev.results.map((x) => <li key={x.id} className="flex justify-between gap-2"><span>{x.passed ? '✅' : '❌'} {x.id} <span className="text-slate-400">({x.lang})</span></span><span className="text-slate-500">{x.tier} {x.monthly ? inr(x.monthly) : ''}</span></li>)}</ul>
+              <div className="text-3xl font-bold">{ev.passed}/{ev.total} <span className="text-base font-medium text-muted">passing</span></div>
+              <ul className="mt-2 max-h-48 space-y-1 overflow-y-auto text-xs">{ev.results.map((x) => <li key={x.id} className="flex justify-between gap-2"><span><span className={x.passed ? 'text-leaf' : 'text-rose-600'}>{x.passed ? 'Pass' : 'Fail'}</span> {x.id} <span className="text-faint">({x.lang})</span></span><span className="text-muted">{x.tier} {x.monthly ? inr(x.monthly) : ''}</span></li>)}</ul>
             </>
           ) : <Spinner />}
         </Section>
         <Section title="Live from this instance" subtitle="Real telemetry from sessions on this server.">
           {live ? (
             <div className="space-y-1 text-sm">
-              {Object.entries(live.funnel).map(([k, v]) => <div key={k} className="flex justify-between"><span className="capitalize text-slate-600">{k}</span><b>{v}</b></div>)}
-              <div className="flex justify-between"><span className="text-slate-600">Avg minutes to order</span><b>{live.avg_minutes_to_order ?? '—'}</b></div>
-              <div className="flex justify-between"><span className="text-slate-600">Handoffs to humans</span><b>{live.handoffs}</b></div>
-              <div className="flex justify-between"><span className="text-slate-600">AI provider</span><b>{live.llm.provider}</b></div>
+              {Object.entries(live.funnel).map(([k, v]) => <div key={k} className="flex justify-between"><span className="capitalize text-muted">{k}</span><b>{v}</b></div>)}
+              <div className="flex justify-between"><span className="text-muted">Avg minutes to order</span><b>{live.avg_minutes_to_order ?? '—'}</b></div>
+              <div className="flex justify-between"><span className="text-muted">Handoffs to humans</span><b>{live.handoffs}</b></div>
+              <div className="flex justify-between"><span className="text-muted">AI provider</span><b>{live.llm.provider}</b></div>
             </div>
           ) : <Spinner />}
         </Section>
         <Section title="Ops: SLA early warning" subtitle="Orders at risk of crossing 21 days — before the customer has to call.">
-          {sla.length === 0 ? <p className="text-sm text-slate-500">No orders at risk.</p> : <ul className="space-y-1 text-xs">{sla.map((a) => <li key={a.order_id} className="rounded-lg bg-amber-50 px-2 py-1"><b>{a.business}</b> · {a.reason}</li>)}</ul>}
+          {sla.length === 0 ? <p className="text-sm text-muted">No orders at risk.</p> : <ul className="space-y-1 text-xs">{sla.map((a) => <li key={a.order_id} className="rounded-lg bg-amber-50 px-2 py-1"><b>{a.business}</b> · {a.reason}</li>)}</ul>}
         </Section>
       </div>
     </div>
@@ -198,8 +198,8 @@ export default function Insights() {
 function Slider({ label, hint, value, min, max, step, fmt, onChange }: { label: string; hint?: string; value: number; min: number; max: number; step: number; fmt: (v: number) => string; onChange: (v: number) => void }) {
   return (
     <label className="block">
-      <div className="flex justify-between gap-2 text-xs"><span className="text-slate-700">{label}</span><span className="shrink-0 font-semibold">{fmt(value)}</span></div>
-      {hint && <div className="text-[10px] text-slate-400">via {hint}</div>}
+      <div className="flex justify-between gap-2 text-xs"><span className="text-ink">{label}</span><span className="shrink-0 font-semibold">{fmt(value)}</span></div>
+      {hint && <div className="text-[10px] text-faint">via {hint}</div>}
       <input type="range" min={min} max={max} step={step} value={value} onChange={(e) => onChange(Number(e.target.value))} className="w-full accent-[var(--brand)]" />
     </label>
   )

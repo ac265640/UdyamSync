@@ -1,44 +1,140 @@
 @import "tailwindcss";
+@import "@fontsource-variable/fraunces";
+@import "@fontsource-variable/onest";
+@import "@fontsource/tiro-devanagari-hindi/400.css";
+@import "@fontsource/mukta/400.css";
+@import "@fontsource/mukta/600.css";
 
+/* ------------------------------------------------------------------ tokens
+   World: the merchant's khata (see docs/DESIGN.md). */
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Noto Sans", "Noto Sans Devanagari", sans-serif;
-  --color-ink: #0f172a;
+  --font-sans: "Onest Variable", "Mukta", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces Variable", "Tiro Devanagari Hindi", Georgia, serif;
+  --color-paper: #f6f1e7;
+  --color-surface: #fffdf8;
+  --color-line: #e4dccb;
+  --color-line-strong: #cfc4ad;
+  --color-ink: #1b1a17;
+  --color-muted: #5f584c;
+  --color-faint: #8a8172;
+  --color-khata: #b4232a;
+  --color-haldi: #d9950b;
+  --color-leaf: #1e7b4e;
+  --ease-out-soft: cubic-bezier(.2, .8, .2, 1);
 }
 
 :root {
-  --brand: #0B1F4B;      /* Accel navy */
-  --brand-2: #00B5E2;    /* Accel cyan */
-  --brand-soft: #e6f7fc;
+  --brand: #0f5e6e;          /* peacock — Accel (case universe) */
+  --brand-ink: #0a4350;
+  --brand-soft: #e3efef;
   --brand-contrast: #ffffff;
+  --m-in: 140ms;
+  --m-out: 200ms;
+  --m-press: 90ms;
+  --shadow: 0 1px 2px rgb(27 26 23 / .06), 0 8px 24px -12px rgb(27 26 23 / .18);
+  --shadow-lift: 0 2px 4px rgb(27 26 23 / .06), 0 16px 32px -14px rgb(27 26 23 / .24);
+  color-scheme: light;
 }
 [data-theme="airtel"] {
-  --brand: #E40000;
-  --brand-2: #ff4d4d;
-  --brand-soft: #fdecec;
-  --brand-contrast: #ffffff;
+  --brand: #e40000;
+  --brand-ink: #b30000;
+  --brand-soft: #fdeaea;
 }
 
-html, body, #root { height: 100%; }
-body { background: #f8fafc; color: #0f172a; -webkit-font-smoothing: antialiased; }
+html, body, #root { min-height: 100%; }
+html { background: var(--color-paper); }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+:lang(hi), :lang(mr) { font-family: "Mukta", var(--font-sans); }
 
-@utility btn { @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition active:scale-[.98] disabled:opacity-50 disabled:cursor-not-allowed; }
-@utility btn-primary { @apply btn text-white shadow-sm; background: var(--brand); &:hover { filter: brightness(1.1); } }
-@utility btn-ghost { @apply btn bg-white text-slate-700 ring-1 ring-slate-200 hover:bg-slate-50; }
-@utility card { @apply rounded-2xl bg-white shadow-sm ring-1 ring-slate-200/70; }
-@utility chip { @apply rounded-full border px-3 py-1.5 text-sm transition; }
-@utility pill { @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium; }
+/* Browser surfaces, themed (impeccable: the cheapest signal a page was built). */
+::selection { background: color-mix(in oklab, var(--brand) 22%, transparent); color: var(--color-ink); }
+input, textarea { caret-color: var(--brand); }
+* { scrollbar-width: thin; scrollbar-color: var(--color-line-strong) transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--color-line-strong); border-radius: 99px; border: 3px solid var(--color-paper); }
+:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 6px; }
+.num, table, .tabular { font-variant-numeric: tabular-nums; }
+
+/* ------------------------------------------------------------------ type */
+@utility display { font-family: var(--font-display); font-optical-sizing: auto; letter-spacing: -0.025em; line-height: 1.02; text-wrap: balance; }
+@utility lede { font-size: 1.125rem; line-height: 1.6; color: var(--color-muted); max-width: 62ch; text-wrap: pretty; }
+
+/* ------------------------------------------------------------------ hover layer (taste-skill motion tokens) */
+@utility btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  border-radius: 12px; padding: .7rem 1.1rem; font-size: .9rem; font-weight: 600; line-height: 1.1;
+  transition: transform var(--m-out) var(--ease-out-soft), background-color var(--m-out) var(--ease-out-soft), box-shadow var(--m-out), color var(--m-out);
+  &:disabled { opacity: .45; cursor: not-allowed; }
+  @media (hover: hover) and (pointer: fine) { &:hover:not(:disabled) { transform: translateY(-1px); transition-duration: var(--m-in); } }
+  &:active:not(:disabled) { transform: translateY(1px) scale(.985); transition-duration: var(--m-press); }
+}
+@utility btn-primary { @apply btn; background: var(--brand); color: var(--brand-contrast);
+  @media (hover: hover) and (pointer: fine) { &:hover:not(:disabled) { background: var(--brand-ink); } } }
+@utility btn-ink { @apply btn; background: var(--color-ink); color: var(--color-paper);
+  @media (hover: hover) and (pointer: fine) { &:hover:not(:disabled) { background: #36322b; } } }
+@utility btn-ghost { @apply btn; background: var(--color-surface); color: var(--color-ink); box-shadow: inset 0 0 0 1px var(--color-line);
+  @media (hover: hover) and (pointer: fine) { &:hover:not(:disabled) { box-shadow: inset 0 0 0 1px var(--color-line-strong); background: #fffaf0; } } }
+@utility card { background: var(--color-surface); border-radius: 14px; box-shadow: inset 0 0 0 1px var(--color-line); }
+@utility card-link { @apply card; transition: transform 180ms var(--ease-out-soft), box-shadow var(--m-out);
+  @media (hover: hover) and (pointer: fine) { &:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1px var(--color-line-strong), var(--shadow-lift); } } }
+@utility chip { border-radius: 999px; padding: .45rem .8rem; font-size: .85rem; transition: background-color var(--m-out), box-shadow var(--m-out), transform var(--m-out) var(--ease-out-soft);
+  &:active { transform: scale(.97); } }
+@utility pill { display: inline-flex; align-items: center; gap: .25rem; border-radius: 999px; padding: .15rem .55rem; font-size: .75rem; font-weight: 600; }
+@utility link { background-image: linear-gradient(currentColor, currentColor), linear-gradient(var(--color-line-strong), var(--color-line-strong)); background-size: 0 1px, 100% 1px; background-position: 0 100%, 0 100%; background-repeat: no-repeat; padding-bottom: 1px; transition: background-size var(--m-out) var(--ease-out-soft);
+  @media (hover: hover) { &:hover { background-size: 100% 1px, 100% 1px; } } }
+@utility navlink { position: relative; color: var(--color-muted); transition: color var(--m-out);
+  &::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 1.5px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform var(--m-out) var(--ease-out-soft); }
+  &:hover, &[aria-current="page"] { color: var(--color-ink); }
+  &:hover::after, &[aria-current="page"]::after { transform: scaleX(1); } }
+@utility field { width: 100%; border-radius: 10px; background: var(--color-surface); box-shadow: inset 0 0 0 1px var(--color-line); padding: .6rem .8rem; font-size: .9rem; outline: none; transition: box-shadow var(--m-in);
+  &:focus { box-shadow: inset 0 0 0 1px var(--brand), 0 0 0 3px color-mix(in oklab, var(--brand) 18%, transparent); } }
+
+/* brand helpers used across the app */
 @utility bg-brand { background: var(--brand); }
-@utility bg-brand-2 { background: var(--brand-2); }
 @utility bg-brand-soft { background: var(--brand-soft); }
 @utility text-brand { color: var(--brand); }
-@utility text-brand-2 { color: var(--brand-2); }
 @utility border-brand { border-color: var(--brand); }
 @utility ring-brand { --tw-ring-color: var(--brand); }
-.fade-in { animation: fade .25s ease-out; }
-@keyframes fade { from { opacity: 0; transform: translateY(4px) } to { opacity: 1; transform: none } }
+
+/* ------------------------------------------------------------------ the khata (ledger page) — the one place ruled lines are earned */
+@utility ledger {
+  position: relative; background-color: #fffdf6;
+  background-image: linear-gradient(to bottom, transparent calc(2.25rem - 1px), #ebe2cf calc(2.25rem - 1px));
+  background-size: 100% 2.25rem;
+  &::before { content: ""; position: absolute; top: 0; bottom: 0; left: 2.1rem; width: 1px; background: color-mix(in oklab, var(--color-khata) 55%, transparent); box-shadow: 3px 0 0 color-mix(in oklab, var(--color-khata) 30%, transparent); }
+}
+
+@utility khata { position: relative;
+  &::before { content: ""; position: absolute; z-index: 1; top: 0; bottom: 0; left: 1.85rem; width: 1px; background: color-mix(in oklab, var(--color-khata) 55%, transparent); box-shadow: 3px 0 0 color-mix(in oklab, var(--color-khata) 28%, transparent); pointer-events: none; } }
+
+/* ------------------------------------------------------------------ stamp (KYC verdict) */
+@utility stamp {
+  display: inline-flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.05;
+  border: 3px double currentColor; border-radius: 10px; padding: .35rem .9rem; font-family: var(--font-display);
+  font-weight: 700; letter-spacing: .06em; text-transform: uppercase; transform: rotate(-7deg);
+  mix-blend-mode: multiply; opacity: .92;
+}
+.stamp-in { animation: stamp-in 520ms cubic-bezier(.2,.8,.2,1) both; }
+@keyframes stamp-in { 0% { opacity: 0; transform: rotate(-12deg) scale(1.9); } 60% { opacity: .95; transform: rotate(-6deg) scale(.96); } 100% { opacity: .92; transform: rotate(-7deg) scale(1); } }
+
+/* chat + misc */
 .typing span { animation: blink 1.2s infinite; }
 .typing span:nth-child(2) { animation-delay: .2s } .typing span:nth-child(3) { animation-delay: .4s }
 @keyframes blink { 0%, 80%, 100% { opacity: .2 } 40% { opacity: 1 } }
-.wa-bg { background-color: #efeae2; background-image: radial-gradient(#d9d2c5 1px, transparent 1px); background-size: 18px 18px; }
+.msg-in { animation: msg-in 260ms var(--ease-out-soft) both; }
+@keyframes msg-in { from { opacity: 0; transform: translateY(6px) scale(.98); } to { opacity: 1; transform: none; } }
+.fade-in { animation: msg-in 260ms var(--ease-out-soft) both; }
+.wa-bg { background-color: #efe7da; }
 
-@media print { header, footer, .print\:hidden { display: none !important } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; }
+}
+@media print { header, footer, .print\:hidden { display: none !important } body { background: #fff } }
