@@ -70,6 +70,7 @@ class OcrResult:
     quality: dict
     lines: list[str] = field(default_factory=list)
     mean_confidence: float = 0.0
+    boxes: dict[str, list[float]] = field(default_factory=dict)  # field -> [x0,y0,x1,y1] in 0..1 of the (deskewed) page
 
 
 @lru_cache
@@ -284,6 +285,38 @@ def classify(lines: list[str]) -> str | None:
     return None
 
 
+def locate(boxes: list[tuple[list, str, float]], fields: dict[str, str], w: int, h: int) -> dict[str, list[float]]:
+    """Where each extracted field (and each field's printed label) sits on the page: the evidence
+    the inspector draws over the document."""
+    items = _items(boxes)
+    out: dict[str, list[float]] = {}
+
+    def norm(group: list[dict]) -> list[float]:
+        return [round(min(i["x0"] for i in group) / w, 4), round(min(i["y0"] for i in group) / h, 4),
+                round(max(i["x1"] for i in group) / w, 4), round(max(i["y1"] for i in group) / h, 4)]
+
+    for it in items:
+        key = _canonical(it["text"])
+        if key and f"{key}__label" not in out:
+            out[f"{key}__label"] = norm([it])
+    an = lambda t: re.sub(r"[^a-z0-9]", "", t.lower())  # noqa: E731 — keep digits for dates and IDs
+    for key, value in fields.items():
+        if key.endswith("_raw"):
+            continue
+        v = an(fields.get(f"{key}_raw", value))
+        group = [it for it in items if len(an(it["text"])) >= 3 and an(it["text"]) in v and not _canonical(it["text"])]
+        if group:
+            out[key] = norm(group)
+    return out
+
+
+def processed_png(data: bytes) -> bytes:
+    """The page as the engine reads it (straightened), so drawn boxes line up."""
+    img, _ = deskew(load_image(data))
+    ok, buf = cv2.imencode(".png", img)
+    return buf.tobytes() if ok else data
+
+
 def analyse(data: bytes) -> OcrResult:
     img = load_image(data)
     q = quality(img)
@@ -310,4 +343,4 @@ def analyse(data: bytes) -> OcrResult:
     if mean_conf and mean_conf < 0.8 and "blurry" not in q["issues"]:
         q["issues"].append("low_ocr_confidence")
         q["ok"] = False
-    return OcrResult(doc_type, fields, conf, q, lines, round(mean_conf, 3))
+    return OcrResult(doc_type, fields, conf, q, lines, round(mean_conf, 3), locate(boxes, fields, img.shape[1], img.shape[0]))

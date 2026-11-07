@@ -1,0 +1,29 @@
+{
+  "voice": "af_heart",
+  "scenes": [
+    { "id": "s01_hook", "type": "card", "card": "hook",
+      "vo": "Ninety-three of every hundred small businesses that ask Accel for internet never get switched on. Not because they don't want it. Because the journey takes seventeen days, three follow-up calls, and fifteen thousand rupees to win each one." },
+    { "id": "s02_title", "type": "card", "card": "title",
+      "vo": "This is Oodyum Sync. Get your business online, in one sitting." },
+    { "id": "s03_landing", "type": "clip", "caption": "Landing · live advisor, three languages",
+      "vo": "It opens on the real product. The advisor answers in Hindi, Marathi and English, with prices from the same engine the app uses." },
+    { "id": "s04_advisor", "type": "clip", "caption": "Owner app · Hindi · Vyapar Saathi",
+      "vo": "A dentist in Pune describes her clinic, in Hindi. Three questions later she has a bundle. Every product is explained in plain words and priced from the catalogue, never invented by the AI." },
+    { "id": "s05_onebill", "type": "clip", "caption": "OneBill · branches by pincode",
+      "vo": "OneBill puts it all on one monthly line. Add-ons toggle and re-price instantly. A three-branch restaurant gets fibre where fibre reaches, and five-G AirFiber where it doesn't, on the same bill." },
+    { "id": "s06_kyc", "type": "clip", "caption": "Smart KYC · consent first",
+      "vo": "Verification starts with consent, one purpose at a time, sealed in a tamper-evident ledger. Documents are read on our own server and checked against the GST and Udyam registries in seconds." },
+    { "id": "s07_inspector", "type": "clip", "caption": "KYC Inspector · 12 specimen applicants",
+      "vo": "Here are the twelve specimen applicants from the case. Every planted problem is caught, drawn exactly where it was read, and turned into a fix the owner can act on. An edited business name. A bill that's eight months old." },
+    { "id": "s08_track", "type": "clip", "caption": "e-Sign · UPI AutoPay · tracker",
+      "vo": "Then an e-sign, a slide to set up UPI AutoPay, and the owner gets a tracker instead of a helpline. Every stage also lands on WhatsApp, because in the data, every chase call raises churn." },
+    { "id": "s09_whatsapp", "type": "clip", "caption": "WhatsApp · Marathi",
+      "vo": "The whole advisor also lives inside WhatsApp. Here in Marathi, for the kiraana owner who will never open a website." },
+    { "id": "s10_partner", "type": "clip", "caption": "Partner Co-Pilot",
+      "vo": "Partners aren't replaced. Leads the advisor can't close reach them with the chat summary, a win-back score and the next best action. Assisted sales credit their commission." },
+    { "id": "s11_insights", "type": "clip", "caption": "Insights · Replay the Quarter",
+      "vo": "And the business case is computed, not claimed. Replaying the same five thousand leads lifts conversion from seven to almost eighteen percent, cuts the cost of each activation to about four thousand rupees, and blocks all fifty-six rule-breaking sales." },
+    { "id": "s12_close", "type": "card", "card": "close",
+      "vo": "Oodyum Sync. Built for Airtel SYNC, and open source on GitHub. Ek baar mein, vyaapaar digital." }
+  ]
+}

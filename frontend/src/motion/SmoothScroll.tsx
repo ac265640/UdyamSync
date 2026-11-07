@@ -20,7 +20,7 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (prefersReducedMotion() || !isFinePointer()) return
-    const lenis = new Lenis({ duration: 1.05, easing: (t) => 1 - Math.pow(1 - t, 3.2), wheelMultiplier: 0.95, prevent: (node) => !!node.closest?.('[data-lenis-prevent]') })
+    const lenis = new Lenis({ duration: 1.05, easing: (t) => 1 - Math.pow(1 - t, 3.2), wheelMultiplier: 0.95, prevent: (node) => !!node.closest?.('[data-lenis-prevent], .overflow-y-auto, .overflow-auto') })
     ref.current = lenis
     lenis.on('scroll', ScrollTrigger.update)
     const tick = (time: number) => lenis.raf(time * 1000)

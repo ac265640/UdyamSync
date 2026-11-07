@@ -49,7 +49,7 @@ export default function Journey() {
       api.resume(sid).then((r) => {
         setState(r)
         setLang(r.lang)
-        const st = step === 'advisor' && r.recommendation && fromUrl ? 'quote' : step
+        const st = !params.get('step') && r.recommendation && fromUrl ? 'quote' : step
         persist({ sid, step: st, lang: r.lang, orderId: local?.sid === sid ? local?.orderId : undefined, partner: null })
         if (local?.sid === sid && local.orderId) api.getOrder(local.orderId).then(setOrder).catch(() => {})
       }).catch(() => begin(lang))

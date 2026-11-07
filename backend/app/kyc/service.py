@@ -200,7 +200,7 @@ def sample_result(applicant: str) -> dict:
             docs[t] = analyse(f.read_bytes()) if f.exists() else None
             files[t] = f"/api/kyc/samples/{applicant}/{t}.png" if f.exists() else None
         result = evaluate(docs)
-        extracted = {t: (d.fields | {"_quality": d.quality, "_type": d.doc_type}) if d else None for t, d in docs.items()}
+        extracted = {t: (d.fields | {"_quality": d.quality, "_type": d.doc_type, "_boxes": d.boxes}) if d else None for t, d in docs.items()}
         for f in extracted.values():
             if f:
                 f.pop("consumer_no", None)

@@ -28,3 +28,11 @@ dist/
 .idea/
 .vscode/
 frontend/node_modules/
+
+# Submission build intermediates (sources and final outputs are committed)
+submission/tools/node_modules/
+submission/video/frames/
+submission/video/raw/
+submission/video/scenes/
+submission/video/clips/
+submission/video/audio/

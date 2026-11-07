@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { api } from '../api'
+import DocScanner from '../components/DocScanner'
 import { Section, Spinner, StatusIcon, Verdict } from '../components/ui'
 
 const DOCS: Record<string, string> = { gst_certificate: 'GST certificate', udyam_certificate: 'Udyam certificate', signatory_id: 'Signatory ID', address_proof: 'Address proof' }
@@ -11,7 +12,14 @@ export default function Inspector() {
   const [sel, setSel] = useState(() => (/^K(0[1-9]|1[0-2])$/.test(params.get('k') ?? '') ? params.get('k')! : 'K01'))
   const [r, setR] = useState<Awaited<ReturnType<typeof api.sample>> | null>(null)
   useEffect(() => { api.samples().then(setList) }, [])
-  useEffect(() => { setR(null); api.sample(sel).then(setR) }, [sel])
+  const [stamp, setStamp] = useState<string | null>(null)
+  useEffect(() => { setR(null); setStamp(null); api.sample(sel).then(setR) }, [sel])
+  // The verdict is stamped once all four pages have been read.
+  useEffect(() => {
+    if (!r) return
+    const t = setTimeout(() => setStamp(r.applicant), 6600)
+    return () => clearTimeout(t)
+  }, [r])
   return (
     <div className="mx-auto max-w-7xl space-y-4 px-4 py-6">
       <div>
@@ -29,26 +37,23 @@ export default function Inspector() {
         </div>
       )}
       {!r ? <Spinner /> : (
-        <div className="grid gap-4 lg:grid-cols-[1fr_28rem]">
+        <div className="grid gap-4 xl:grid-cols-[1fr_24rem]">
           <Section title={`${r.applicant} · ${r.registry?.trade_name ?? (r.extracted.udyam_certificate as { enterprise_name?: string } | null)?.enterprise_name ?? ''}`} right={<Verdict verdict={r.verdict} label={r.verdict_label} />}>
-            <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-              {Object.keys(DOCS).map((d) => {
-                const ex = r.extracted[d] as (Record<string, unknown> & { _quality?: { issues: string[]; skew_deg: number } }) | null
+            <div className="relative grid grid-cols-2 gap-x-5 gap-y-6">
+              {Object.keys(DOCS).map((d, i) => {
+                const ex = r.extracted[d] as (Record<string, unknown> & { _boxes?: Record<string, number[]> }) | null
                 return (
-                  <div key={d} className="rounded-xl p-2 ring-1 ring-line">
-                    <div className="mb-1 text-xs font-semibold">{DOCS[d]}</div>
-                    {r.files[d] ? <a href={r.files[d]!} target="_blank" rel="noreferrer"><img src={r.files[d]!} alt={DOCS[d]} className="h-36 w-full rounded-lg bg-paper object-contain" loading="lazy" /></a> : <div className="flex h-36 items-center justify-center rounded-lg bg-rose-50 text-xs font-semibold text-rose-600">Not provided</div>}
-                    {ex && (
-                      <dl className="mt-2 space-y-0.5 text-[10px]">
-                        {Object.entries(ex).filter(([k]) => !k.startsWith('_') && k !== 'gstin_raw').slice(0, 6).map(([k, v]) => <div key={k} className="flex gap-1"><dt className="shrink-0 text-faint">{k.replace(/_/g, ' ')}:</dt><dd className="truncate text-ink">{String(v)}</dd></div>)}
-                        {ex._quality?.issues?.length ? <div className="font-semibold text-rose-600">Issue: {ex._quality.issues.join(', ')}</div> : null}
-                        {ex._quality?.skew_deg ? <div className="font-semibold text-amber-600">Straightened {ex._quality.skew_deg}°</div> : null}
-                      </dl>
-                    )}
-                  </div>
+                  <DocScanner key={`${r.applicant}-${d}`} label={DOCS[d]} src={r.files[d] ? `${r.files[d]}?processed=1` : null} missing={!r.files[d]}
+                    boxes={ex?._boxes ?? {}} checks={r.checks.filter((c) => c.doc === d)} delay={i * 1500} />
                 )
               })}
+              {stamp === r.applicant && <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
+                {r.verdict === 'action_needed'
+                  ? <div className="stamp stamp-in bg-[#fdf6f0]/85 text-[30px] text-khata"><span lang="hi" className="text-[19px] normal-case tracking-normal">सुधार करें</span>Fix &amp; resend</div>
+                  : <div className="stamp stamp-in bg-[#f3faf5]/85 text-[30px] text-leaf"><span lang="hi" className="text-[19px] normal-case tracking-normal">सत्यापित</span>Verified</div>}
+              </div>}
             </div>
+            <p className="mt-3 text-[11px] text-faint">Boxes are drawn where the OCR actually read each field; hover one for the finding. Pages are shown as the engine reads them (straightened, watermark still visible).</p>
           </Section>
           <Section title="Checks" subtitle={`${r.summary.pass} passed · ${r.summary.warn} to confirm · ${r.summary.fail} to fix`}>
             <ul className="max-h-[32rem] space-y-1.5 overflow-y-auto">

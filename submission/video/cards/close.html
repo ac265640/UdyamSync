@@ -1,0 +1,29 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+  .name { position: absolute; left: 190px; top: 170px; font-size: 150px; font-weight: 500; }
+  .hi { position: absolute; left: 196px; top: 360px; font-size: 92px; color: var(--brand); font-family: "Tiro Devanagari Hindi", serif; }
+  .rows { position: absolute; left: 196px; top: 560px; font-size: 38px; line-height: 1.75; }
+  .rows b { display: inline-block; width: 300px; color: var(--muted); font-weight: 500; }
+  .stamp { position: absolute; right: 190px; top: 330px; border: 7px double var(--leaf); color: var(--leaf); border-radius: 20px; padding: 16px 40px; text-align: center; transform: rotate(-7deg); font-family: "Fraunces Variable", serif; font-weight: 700; font-size: 64px; letter-spacing: .06em; mix-blend-mode: multiply; }
+  .stamp small { display: block; font-family: "Tiro Devanagari Hindi", serif; font-size: 48px; letter-spacing: 0; font-weight: 400; }
+</style></head><body>
+<div class="margin"></div>
+<div class="name serif" id="name">UdyamSync</div>
+<div class="hi" id="hi">एक बार में, व्यापार डिजिटल।</div>
+<div class="rows" id="rows">
+  <div><b>Open source</b>github.com/ac265640/UdyamSync</div>
+  <div><b>Run it</b>docker compose up</div>
+  <div><b>Built for</b>Airtel SYNC 2026 · YTL Hackathon · Enterprise Track A</div>
+</div>
+<div class="stamp" id="stamp"><small>सत्यापित</small>READY</div>
+<div class="foot"><span>All businesses, people and figures are synthetic</span><span>Accel UdyamSync</span></div>
+<script src="../../../frontend/node_modules/gsap/dist/gsap.min.js"></script>
+<script>
+  const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } })
+  tl.from('.margin', { scaleY: 0, duration: 0.7, ease: 'power2.inOut' }, 0)
+    .from('#name', { opacity: 0, y: 30, filter: 'blur(8px)', duration: 0.8 }, 0.1)
+    .from('#rows > div', { opacity: 0, x: -24, stagger: 0.35, duration: 0.6 }, 1.3)
+    .from('#hi', { opacity: 0, y: 20, duration: 0.8 }, 4.2)
+    .from('#stamp', { opacity: 0, scale: 1.9, rotate: -14, duration: 0.5, ease: 'power4.out' }, 5.6)
+  window.seek = (t) => { tl.seek(t, false) }
+</script></body></html>

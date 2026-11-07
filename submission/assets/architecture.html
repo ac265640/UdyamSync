@@ -1,0 +1,85 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../frontend/node_modules/@fontsource-variable/fraunces/index.css">
+<link rel="stylesheet" href="../../frontend/node_modules/@fontsource-variable/onest/index.css">
+<style>
+  :root { --ink:#1b1a17; --muted:#5f584c; --line:#d9cfba; --paper:#f6f1e7; --surface:#fffdf8; --brand:#0f5e6e; --khata:#b4232a; --leaf:#1e7b4e; --haldi:#d9950b; }
+  * { box-sizing: border-box; margin: 0; }
+  body { width: 1920px; height: 1080px; background: var(--paper); font-family: "Onest Variable", Arial, sans-serif; color: var(--ink); padding: 56px 64px; }
+  h1 { font-family: "Fraunces Variable", Georgia, serif; font-weight: 500; font-size: 52px; letter-spacing: -0.02em; }
+  .sub { color: var(--muted); font-size: 21px; margin-top: 8px; }
+  .grid { display: grid; grid-template-columns: 300px 1fr 330px; gap: 36px; margin-top: 40px; height: 820px; }
+  .col h2 { font-size: 15px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; font-weight: 600; }
+  .box { background: var(--surface); border-radius: 16px; box-shadow: inset 0 0 0 1.5px var(--line); padding: 18px 20px; margin-bottom: 14px; }
+  .box b { display: block; font-size: 20px; margin-bottom: 4px; }
+  .box span { font-size: 15.5px; color: var(--muted); line-height: 1.4; }
+  .api { background: var(--surface); border-radius: 22px; box-shadow: inset 0 0 0 2px var(--brand); padding: 22px; height: 100%; position: relative; }
+  .api .title { display:flex; justify-content: space-between; align-items: baseline; }
+  .api .title b { font-family: "Fraunces Variable", Georgia, serif; font-size: 28px; font-weight: 600; }
+  .api .title i { font-style: normal; color: var(--muted); font-size: 16px; }
+  .mods { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 18px; }
+  .mod { border-radius: 14px; padding: 15px 16px; background: #fbf7ee; box-shadow: inset 0 0 0 1.5px var(--line); }
+  .mod b { font-size: 18.5px; display: block; }
+  .mod span { font-size: 14.5px; color: var(--muted); line-height: 1.38; display: block; margin-top: 4px; }
+  .mod.key { background: #e3efef; box-shadow: inset 0 0 0 1.5px #9cc3c9; }
+  .mod.red { background: #fbeceb; box-shadow: inset 0 0 0 1.5px #e3b6b6; }
+  .rule { margin-top: 18px; padding: 14px 18px; border-radius: 14px; background: var(--ink); color: #f6f1e7; font-size: 17px; line-height: 1.45; }
+  .rule b { color: #f2b53a; }
+  .db b { font-size: 18.5px; }
+  .ext { box-shadow: none; border: 1.5px dashed #b9ae98; }
+  .tag { display:inline-block; font-size: 12.5px; font-weight: 700; letter-spacing:.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 99px; background: #fdf3e2; color: #8a5a00; margin-top: 6px; }
+  .arrow { position: absolute; font-size: 30px; color: var(--brand); }
+  .flow { display:flex; gap: 10px; align-items:center; margin-top: 18px; font-size: 16px; color: var(--muted); flex-wrap: wrap; }
+.prod { display: grid; grid-template-columns: 1fr 40px 1fr; gap: 12px; margin-top: 22px; }
+  .prod > div { border-radius: 14px; padding: 14px 18px; background: #fbf7ee; box-shadow: inset 0 0 0 1.5px var(--line); }
+  .prod > div.to { background: none; box-shadow: none; display: flex; align-items: center; justify-content: center; font-size: 30px; color: var(--brand); padding: 0; }
+  .prod b { display: block; font-size: 15px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .prod span { display: block; font-size: 16px; line-height: 1.55; }
+  .flow em { font-style: normal; background: var(--brand); color: white; padding: 6px 12px; border-radius: 99px; font-weight: 600; font-size: 15px; }
+</style></head>
+<body>
+  <h1>UdyamSync — solution architecture</h1>
+  <div class="sub">One stateless API, deterministic rules for anything that touches price or compliance, an optional LLM only for language, and every identifier masked or encrypted.</div>
+  <div class="grid">
+    <div class="col">
+      <h2>Who uses it</h2>
+      <div class="box"><b>Owner app (PWA)</b><span>Hindi · Marathi · English built in, 7 more via LLM · voice in and out on the device · resumes after a dropped connection</span></div>
+      <div class="box"><b>WhatsApp view</b><span>Same advisor session; quote card hands off to the web OneBill</span></div>
+      <div class="box"><b>Partner Co-Pilot</b><span>Win-back inbox, assisted mode on a tablet, commission credit, KYC exceptions</span></div>
+      <div class="box"><b>Signatory link</b><span>Remote e-sign on the signatory's own phone</span></div>
+      <div class="box"><b>Insights + KYC Inspector</b><span>Replay the Quarter, compliance report, specimen inspector</span></div>
+    </div>
+    <div class="col">
+      <h2>FastAPI service</h2>
+      <div class="api">
+        <div class="title"><b>UdyamSync API</b><i>Python 3.11 · 65 tests in CI</i></div>
+        <div class="mods">
+          <div class="mod key"><b>Vyapar Saathi advisor</b><span>Rule NLU first, LLM fills gaps · 3-turn discovery · objections · human hand-off</span></div>
+          <div class="mod key"><b>Catalogue rules engine</b><span>City tier · team size · sites · active GSTIN · product dependencies</span></div>
+          <div class="mod key"><b>OneBill quote</b><span>Tiered pricing by term · setup waiver · GST · multi-site feasibility</span></div>
+          <div class="mod red"><b>Smart KYC</b><span>On-server OCR · deskew · watermark removal · 20+ registry checks · field boxes</span></div>
+          <div class="mod red"><b>Consent ledger</b><span>Per-purpose DPDP consent, hash-chained + HMAC, versioned notice</span></div>
+          <div class="mod red"><b>Vault + purge</b><span>Fernet encryption at rest · images purged 30 days after verification</span></div>
+          <div class="mod"><b>Orders &amp; tracker</b><span>5 stages · per-product ETA · WhatsApp updates · SLA watch · remote e-sign</span></div>
+          <div class="mod"><b>Win-back model</b><span>Logistic propensity (AUC 0.73) × drop-reason recoverability · next best action</span></div>
+          <div class="mod"><b>Analytics</b><span>Replay the Quarter · compliance re-run · segment matrix · live telemetry</span></div>
+        </div>
+        <div class="rule"><b>Design rule:</b> the AI talks, the rules engine decides. Prices and eligibility come only from the catalogue; any ₹ figure the model writes that is not in the quote is discarded. Orders are re-priced and re-checked on the server.</div>
+        <div class="flow">Journey: <em>Discover</em>→<em>OneBill</em>→<em>Consent</em>→<em>Smart KYC</em>→<em>e-Sign + AutoPay</em>→<em>Track</em></div>
+        <div class="prod">
+          <div><b>Prototype</b><span>SQLite JSON docs</span><span>Fernet key from secret</span><span>CSV registries</span><span>Mocked DigiLocker, e-Sign, UPI, WhatsApp</span><span>OCR in the API process</span></div>
+          <div class="to">→</div>
+          <div><b>Production</b><span>Postgres + object storage</span><span>KMS keys with rotation</span><span>GSTN / Udyam via licensed GSP</span><span>DigiLocker Requester, ASP e-Sign, NPCI AutoPay, Accel WhatsApp API</span><span>OCR worker queue behind a load balancer</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <h2>Data &amp; services</h2>
+      <div class="box db"><b>Case dataset</b><span>Catalogue (25) · 5,000 leads · GSTIN (3,534) and Udyam (2,723) registries · 47 KYC specimens</span></div>
+      <div class="box db"><b>SQLite store → Postgres</b><span>Sessions, leads, orders, consents, append-only audit log</span></div>
+      <div class="box db"><b>Encrypted vault</b><span>Raw GSTIN and document images only, never in logs</span></div>
+      <div class="box ext"><b>Gemini / Groq (optional)</b><span>Free tier, redacted input, never sees documents</span><div class="tag">optional</div></div>
+      <div class="box ext"><b>DigiLocker · e-Sign · UPI AutoPay · WhatsApp BSP · GSTN/Udyam APIs</b><span>Mocked in the prototype behind the same interfaces</span><div class="tag">production swap</div></div>
+    </div>
+  </div>
+</body></html>

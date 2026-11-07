@@ -1,5 +1,7 @@
 # UdyamSync — Solution architecture
 
+![UdyamSync solution architecture](architecture.png)
+
 ```mermaid
 flowchart LR
   subgraph Clients

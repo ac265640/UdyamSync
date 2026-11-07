@@ -1,0 +1,1 @@
+{"name":"udyamsync-submission-tools","private":true,"type":"module","dependencies":{"kokoro-js":"^1.2.1","playwright":"^1.65.0","pptxgenjs":"^3.12.0"}}

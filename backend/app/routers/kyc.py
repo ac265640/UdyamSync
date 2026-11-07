@@ -122,12 +122,18 @@ def sample(applicant: str) -> dict:
 
 
 @router.get("/samples/{applicant}/{doc}.png")
-def sample_image(applicant: str, doc: str) -> FileResponse:
+def sample_image(applicant: str, doc: str, processed: bool = False):
     if not re.fullmatch(r"K\d{2}", applicant.upper()) or doc not in REQUIRED_DOCS:
         raise HTTPException(404)
     f = get_settings().data_dir / "kyc_documents" / f"{applicant.upper()}_{doc}.png"
     if not f.exists():
         raise HTTPException(404)
+    if processed:
+        from fastapi.responses import Response
+
+        from ..kyc.ocr import processed_png
+
+        return Response(processed_png(f.read_bytes()), media_type="image/png", headers={"Cache-Control": "max-age=3600"})
     return FileResponse(f, media_type="image/png")
 
 
