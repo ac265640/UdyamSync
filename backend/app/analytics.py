@@ -95,6 +95,7 @@ def replay(recovery: dict[str, float] | None = None, *, chase_calls_new: float =
     rec = {**RECOVERABILITY, **(recovery or {})}
     rows = []
     survivors = float(len(L))
+    won_back_by_seg: dict[str, float] = {}
     old_counts = {f["stage"]: f["count"] for f in b["funnel"]}
     for i, st in enumerate(STAGES[:-1]):
         nxt = STAGES[i + 1]
@@ -102,6 +103,8 @@ def replay(recovery: dict[str, float] | None = None, *, chase_calls_new: float =
         passed = old_counts[nxt]
         dropped_here = L[(L.outcome == "Dropped") & (L.stage_reached == st)]
         recovered = sum(len(g) * rec.get(reason, 0.0) for reason, g in dropped_here.groupby("drop_reason"))
+        for seg, g in dropped_here.groupby("segment"):
+            won_back_by_seg[seg] = won_back_by_seg.get(seg, 0.0) + float(g.drop_reason.map(lambda r: rec.get(r, 0.0)).sum())
         old_rate = passed / at
         new_rate = min(0.99, (passed + recovered) / at)
         new_survivors = survivors * new_rate
@@ -119,9 +122,13 @@ def replay(recovery: dict[str, float] | None = None, *, chase_calls_new: float =
     days_new = round(_install_days_digital(), 1)
     act = L[L.outcome == "Activated"]
     mrr_by_seg = act.groupby("segment").monthly_bundle_value_inr.median().to_dict()
-    seg_mix = act.segment.value_counts(normalize=True).to_dict()
-    blended_mrr = sum(mrr_by_seg[s] * w for s, w in seg_mix.items())
+    # Value the extra customers at the segment mix of the leads actually won back (mostly micro
+    # retail), not the historical activation mix, which is skewed to large multi-site bundles.
+    total_won = sum(won_back_by_seg.values()) or 1.0
+    blended_mrr = sum(mrr_by_seg[s] * w / total_won for s, w in won_back_by_seg.items())
     extra = new_acts - old_acts
+    customers_after_year = extra * 4 * (1 - churn_new / 100)
+    arr_run_rate = customers_after_year * blended_mrr * 12
     return {
         "assumptions": {"recovery": rec, "chase_calls_new": chase_calls_new, "field_cost_avoided_pct": field_cost_avoided_pct, "platform_cost_per_lead": platform_cost_per_lead,
                         "notes": [
@@ -129,6 +136,7 @@ def replay(recovery: dict[str, float] | None = None, *, chase_calls_new: float =
                             "Days to activate = quote + KYC on day 0, then the slowest product's install time in each historically bought bundle, +1 day scheduling.",
                             "Churn and NPS are read off the observed relationship between chase calls and churn/NPS (1 call → 5.9% churn).",
                             "Acquisition cost: field/partner spend reduced by the stated %, plus platform cost per lead (AI, OCR, hosting).",
+                            "Revenue: ARR run-rate after one year = extra activations per quarter x 4 x (1 - churn) x median bundle of the won-back segment mix x 12.",
                         ]},
         "stages": rows,
         "before": {"activations": old_acts, "conversion_pct": b["conversion_pct"], "days_to_activate": b["avg_days_to_activate"], "chase_calls": b["avg_chase_calls"],
@@ -137,7 +145,9 @@ def replay(recovery: dict[str, float] | None = None, *, chase_calls_new: float =
                   "cac": int(spend_new / new_acts), "churn_6m_pct": round(churn_new, 1), "nps": round(nps_new, 2)},
         "impact": {
             "extra_activations_per_quarter": int(round(extra)),
-            "extra_annual_recurring_revenue_inr": int(round(extra * blended_mrr * 12 * 4)),
+            # ARR run-rate after one year = extra activations/quarter x 4 quarters x (1 - churn) x blended bundle x 12
+            "extra_annual_recurring_revenue_inr": int(round(arr_run_rate)),
+            "extra_customers_after_year": int(round(customers_after_year)),
             "blended_monthly_bundle_value": int(blended_mrr),
         },
     }

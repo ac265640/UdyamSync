@@ -1,0 +1,57 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../frontend/node_modules/@fontsource-variable/onest/index.css">
+<style>
+  :root { --ink:#1b1a17; --muted:#5f584c; --line:#d9cfba; --surface:#fffdf8; --brand:#0f5e6e; --red:#b4232a; }
+  * { box-sizing: border-box; margin: 0; }
+  body { width: 1920px; height: 800px; background: #fff; font-family: "Onest Variable", Arial, sans-serif; color: var(--ink); padding: 6px 4px; }
+  .g { display: grid; grid-template-columns: 400px 60px 1fr 60px 450px; height: 100%; align-items: stretch; }
+  h2 { font-size: 22px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 12px; }
+  .col { display: flex; flex-direction: column; gap: 12px; }
+  .box { border-radius: 16px; box-shadow: inset 0 0 0 2px var(--line); background: var(--surface); padding: 14px 18px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .box b { font-size: 29px; line-height: 1.15; }
+  .box span { font-size: 22px; color: var(--muted); line-height: 1.25; margin-top: 3px; }
+  .ext { box-shadow: none; border: 2.5px dashed #b9ae98; }
+  .arrow { display: flex; align-items: center; justify-content: center; font-size: 52px; color: var(--brand); font-weight: 700; padding-top: 40px; }
+  .api { border-radius: 22px; box-shadow: inset 0 0 0 3px var(--brand); padding: 18px; display: flex; flex-direction: column; gap: 14px; height: calc(100% - 46px); }
+  .mods { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; flex: 1; }
+  .mod { border-radius: 14px; padding: 12px 16px; background: #e3efef; display: flex; flex-direction: column; justify-content: center; }
+  .mod.r { background: #fbeceb; }
+  .mod.n { background: #f5f0e4; }
+  .mod b { font-size: 29px; line-height: 1.12; }
+  .mod span { font-size: 21px; color: var(--muted); line-height: 1.25; margin-top: 4px; }
+  .rule { border-radius: 14px; background: var(--ink); color: #f6f1e7; font-size: 25px; line-height: 1.3; padding: 14px 20px; }
+  .rule b { color: #f2b53a; }
+</style></head>
+<body>
+<div class="g">
+  <div><h2>Channels</h2><div class="col" style="height:calc(100% - 46px)">
+    <div class="box"><b>Owner app (web / PWA)</b><span>Text or voice · Hindi, Marathi, English</span></div>
+    <div class="box"><b>WhatsApp-style chat</b><span>Same advisor session</span></div>
+    <div class="box"><b>Partner Co-Pilot</b><span>Win-back inbox · assisted mode</span></div>
+    <div class="box"><b>Insights · KYC Inspector</b><span>Replay, compliance, specimens</span></div>
+  </div></div>
+  <div class="arrow">⇄</div>
+  <div><h2>UdyamSync API (FastAPI)</h2><div class="api">
+    <div class="mods">
+      <div class="mod"><b>Advisor</b><span>Rules NLU first; LLM adds languages and free-form answers</span></div>
+      <div class="mod"><b>Rules engine</b><span>Tier, size, GSTIN, dependencies from the catalogue</span></div>
+      <div class="mod"><b>OneBill quote</b><span>Term pricing, add-ons, multi-site feasibility</span></div>
+      <div class="mod r"><b>Smart KYC</b><span>On-server OCR + 20 registry checks</span></div>
+      <div class="mod r"><b>Consent ledger</b><span>Per purpose, hash-chained</span></div>
+      <div class="mod r"><b>Vault</b><span>Encrypted; images purged after 30 days</span></div>
+      <div class="mod n"><b>Orders &amp; tracker</b><span>Per-product ETA, SLA watch, e-sign</span></div>
+      <div class="mod n"><b>Win-back model</b><span>Propensity × recoverability</span></div>
+      <div class="mod n"><b>Analytics</b><span>Replay the quarter, compliance</span></div>
+    </div>
+    <div class="rule"><b>Design rule:</b> the AI talks, the rules engine decides. Prices come only from the catalogue, and every order is re-priced on the server.</div>
+  </div></div>
+  <div class="arrow">⇄</div>
+  <div><h2>Data &amp; integrations</h2><div class="col" style="height:calc(100% - 46px)">
+    <div class="box"><b>Case data</b><span>Catalogue · 5,000 leads · GSTIN + Udyam registries</span></div>
+    <div class="box"><b>Store + audit log</b><span>SQLite now, Postgres in production</span></div>
+    <div class="box ext"><b>DigiLocker · e-sign · UPI AutoPay · WhatsApp API</b><span>Mocked behind production interfaces</span></div>
+    <div class="box ext"><b>LLM: Gemini / Groq</b><span>Optional · redacted text only</span></div>
+  </div></div>
+</div>
+</body></html>

@@ -1,55 +1,62 @@
 # UdyamSync — Data privacy & security note (1 page)
 
-We treat the synthetic case data as if it were real customer data, designed for the **Digital Personal Data Protection Act, 2023** and the **DPDP Rules, 2025** (notified 13 Nov 2025, phased over 18 months; the consent-manager rule applies from 13 Nov 2026).
+**Team Softmax · Deliverable 4 of 4.** Printable one-page version: [UdyamSync_Privacy_Note.pdf](https://ac265640.github.io/UdyamSync/UdyamSync_Privacy_Note.pdf).
 
-**1. Lawful basis and purpose limitation.** Processing rests on consent, recorded **per purpose**:
-- Verifying the business to activate service. This one is required, because DoT telecom licensing requires KYC.
-- Order updates on WhatsApp/SMS. Optional.
-- Sharing a business summary with a local partner. Optional, off by default.
-- Marketing. Optional, off by default.
+Built for the **Digital Personal Data Protection Act, 2023** and the DPDP Rules, 2025. The case data is synthetic, but we treat it as real. Personal data here means the proprietor's, partners' and signatory's details (name, phone, ID, address, GSTIN of a proprietorship).
 
-KYC data is never reused for marketing. Each consent record stores the notice version the person saw.
+## 1. Who is responsible: roles under the DPDP Act
 
-**2. Data minimisation.** Each step asks only what it needs:
-- A GSTIN lookup replaces typing the business details.
-- The **Aadhaar number is never collected**. DigiLocker and e-sign return a verified yes/no and a reference.
-- Partners see a masked business summary and never documents.
-- The order form stores the e-sign certificate reference, not the OTP.
+| Party | DPDP role | What they may do with personal data |
+|---|---|---|
+| Accel Telecom (Accel Business) | **Data Fiduciary** | Decides the purposes and means; owns the notice, consent, retention, breach reporting and grievance duties. |
+| UdyamSync platform, cloud host, OCR | Data Processor | Processes only on Accel's written instructions. OCR runs on our own servers, so no third-party AI ever sees document images. |
+| Channel partners | Data Processor (by contract) | See a masked lead summary only, and only if the owner consents to partner sharing. They may not reuse it or keep copies. |
+| WhatsApp BSP, e-sign ASP, UPI/NPCI, optional LLM | Data Processors | Each gets the minimum it needs. The LLM gets redacted text only. |
+| Business owner / signatory | Data Principal | Can see, export, correct, withdraw consent and erase via **My Data**. Grievances are answered within 7 days. |
 
-**3. Masking everywhere.**
-- GSTIN, Udyam, phone and ID numbers are masked in the UI and in every API response.
-- A logging filter redacts identifiers from every log line.
-- Chat messages are stored redacted.
-- Text sent to the optional AI provider is redacted first.
+## 2. Consent, per purpose, before any upload
+- **Verification for activation:** required, because DoT licensing mandates subscriber KYC. Without it the upload API returns 403.
+- **Order updates on WhatsApp/SMS:** optional.
+- **Sharing with a local partner:** optional, **off by default**. Only with it does a stalled lead reach the Partner Co-Pilot, and then as a masked summary.
+- **WhatsApp win-back / marketing:** optional, **off by default**.
+  - Dropped leads are re-contacted only if they opted in.
+  - Historical leads without consent get no message until fresh consent is taken through a channel they already use.
+  - Every message carries an opt-out.
+- **Each consent record stores the notice version shown.** Withdrawing is as easy as giving, and KYC data is never reused for marketing.
 
-**4. Encryption and where data goes.**
-- The raw GSTIN and every uploaded document image are encrypted at rest (Fernet: AES-128-CBC + HMAC-SHA256; production uses KMS keys).
-- **OCR runs on our own server.** Document images never go to a third-party AI.
-- Registry checks are lookups.
+## 3. Data minimisation and purpose limitation
+- **Less typing:** a GSTIN or Udyam lookup replaces typing the business details.
+- **The Aadhaar number is never collected.** DigiLocker and e-sign return a verified yes/no and a reference ID. We store the e-sign certificate reference, never the OTP.
+- **Masking:**
+  - GSTIN, Udyam, phone and ID numbers are masked in the UI, in API responses and in logs; a redaction filter runs on every log line.
+  - Chat is stored redacted.
+- **No reuse of KYC data:** it never feeds marketing or the propensity model. The model uses business attributes only (type, size, sites, spend).
 
-**5. Storage limitation.**
-- Document images are purged automatically **30 days after verification** (configurable). An hourly job enforces it, and the owner sees the deletion date.
-- Masked extracted fields are kept for the contract plus the audit period telecom rules require.
-- Abandoned sessions can be erased.
+## 4. Security controls
+- **Encryption at rest:** raw identifiers and document images are encrypted (Fernet: AES-128-CBC + HMAC-SHA256). Production uses KMS-managed, rotated keys.
+- **Server-side checks:** the server re-prices and re-checks every order, so a tampered client cannot buy an ineligible product.
+- **Uploads and access:**
+  - Uploads must be PNG, JPEG or WEBP under 6 MB.
+  - Partner views are role-based.
+  - Every access goes to an append-only audit log.
+- **LLM guardrails:** the LLM is guarded against prompt injection, and any ₹ amount it invents is discarded.
+- **Secrets** live only in `.env`, never in the repo.
 
-**6. Consent you can audit.** The consent ledger is append-only and **hash-chained with an HMAC**. Editing or deleting any record breaks the chain, and a test checks this. Every access and change goes to an append-only audit log.
+## 5. Auditable consent and breach response
+- **Tamper-evident ledger:** the consent ledger is append-only, **hash-chained and HMAC-sealed**. Editing or deleting any record breaks the chain, and a CI test proves it.
+- **Breaches:** on a personal-data breach, Accel as Data Fiduciary informs the Data Protection Board and affected owners. The audit log and the ledger give the timeline.
+- **Consent Manager:** the ledger is built to plug into a registered Consent Manager.
 
-**7. Data-principal rights, in the product.** The **My Data** page lets the owner:
-- see their profile, documents (with deletion dates), consents, orders and activity
-- download it all as JSON
-- withdraw or grant each consent
-- **erase** their data, which deletes files, profile, chat and leads and keeps only an audit record of the erasure.
+## 6. Storage limitation, and how it fits telecom KYC record-keeping
+- **Document images are purged after 30 days.** These are the photos of certificates and IDs; the purge runs automatically 30 days after verification, and the owner sees the date. It is a setting (`DOC_RETENTION_DAYS`), not hard-coded.
+- **The KYC record itself is kept**, encrypted, for the contract term plus the retention period the telecom licence and DoT KYC instructions prescribe. It holds:
+  - masked extracted fields
+  - registry and DigiLocker/e-sign reference IDs
+  - the verification verdict and timestamps
+- **Abandoned sessions** can be erased at any time from My Data.
 
-A grievance officer contact is in the notice, with a 7-day response time.
+> **Open item for Accel's regulatory team:** we have not confirmed whether the licence requires the document *image* itself to be kept for the full retention period. If it does, the image purge moves to the end of that period, with images still encrypted and every access logged. It is a single configuration change.
 
-**8. Security controls.**
-- The server re-prices and re-checks every order, so a tampered client can't buy an ineligible product.
-- Uploads are restricted to PNG/JPEG/WEBP under 6 MB.
-- Partner views are restricted by role.
-- The AI is guarded against prompt injection, and any ₹ amount it invents is discarded.
-- Secrets live only in `.env`, never in the repo.
-- The CI runs 65 tests, including consent-chain tamper detection, encryption at rest and erasure.
-
-**Prototype honesty.**
-- The registries, DigiLocker, e-sign, UPI AutoPay and the WhatsApp Business API are simulated.
-- The optional free-tier AI may retain prompts. That is acceptable here only because all data is synthetic and redacted first. Production would use a paid no-training tier or a self-hosted model.
+## Prototype honesty
+- **Simulated services:** the GSTIN and Udyam registries, DigiLocker, e-sign, UPI AutoPay and the WhatsApp channel are simulated behind production-shaped interfaces. The WhatsApp screen is a WhatsApp-style web client, not the WhatsApp Business API.
+- **LLM:** the optional free-tier LLM may retain prompts. That is acceptable only because all data is synthetic and redacted first. Production would use a no-training enterprise tier or a self-hosted model.

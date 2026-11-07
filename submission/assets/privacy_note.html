@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Accel UdyamSync: data privacy and security note (Team Softmax)</title>
+<link rel="stylesheet" href="../../frontend/node_modules/@fontsource-variable/fraunces/index.css">
+<link rel="stylesheet" href="../../frontend/node_modules/@fontsource-variable/onest/index.css">
+<style>
+  @page { size: A4; margin: 0; }
+  :root { --ink:#1b1a17; --muted:#5f584c; --line:#e2dbcd; --brand:#0f5e6e; --red:#b4232a; --soft:#eef5f5; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { width: 210mm; height: 297mm; padding: 11mm 12mm 9mm; font: 8.35pt/1.33 "Onest Variable", Arial, sans-serif; color: var(--ink); background: #fff; }
+  header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid var(--red); padding-bottom: 2.2mm; }
+  h1 { font: 500 17.5pt/1.1 "Fraunces Variable", Georgia, serif; letter-spacing: -0.01em; }
+  .meta { text-align: right; color: var(--muted); font-size: 7.6pt; line-height: 1.35; }
+  .meta b { color: var(--red); }
+  .lede { margin: 2.4mm 0 2.6mm; color: var(--muted); font-size: 8.4pt; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2.6mm 4.5mm; }
+  section { break-inside: avoid; }
+  h2 { font-size: 9.3pt; color: var(--brand); margin-bottom: 0.8mm; }
+  h2 span { color: var(--red); margin-right: 1.2mm; }
+  ul { padding-left: 3.6mm; }
+  li { margin-bottom: 0.45mm; }
+  table { width: 100%; border-collapse: collapse; font-size: 7.9pt; }
+  td, th { border: 0.6px solid var(--line); padding: 0.9mm 1.4mm; text-align: left; vertical-align: top; }
+  th { background: var(--ink); color: #fff; font-weight: 600; }
+  .wide { grid-column: 1 / -1; }
+  .flag { background: #fdf3e2; border-left: 3px solid #d9950b; padding: 1.6mm 2.4mm; margin-top: 1.2mm; font-size: 8pt; }
+  .honest { margin-top: 2.6mm; background: var(--soft); padding: 2mm 3mm; border-radius: 2mm; font-size: 8pt; }
+  footer { margin-top: 2.4mm; display: flex; justify-content: space-between; color: var(--muted); font-size: 7pt; }
+</style></head>
+<body>
+<header>
+  <div><h1>Data privacy and security note</h1></div>
+  <div class="meta"><b>Team Softmax</b> · Accel UdyamSync<br>Airtel SYNC 2026 · Track A · Deliverable 4 of 4</div>
+</header>
+<p class="lede">Built for the <b>Digital Personal Data Protection Act, 2023</b> and the DPDP Rules, 2025. The case data is synthetic, but we treat it as real. Personal data here means the proprietor's, partners' and signatory's details (name, phone, ID, address, GSTIN of a proprietorship). Every control below runs in the prototype, and most are covered by the 65 automated tests.</p>
+
+<div class="grid">
+<section class="wide">
+  <h2><span>1</span>Who is responsible: roles under the DPDP Act</h2>
+  <table>
+    <tr><th style="width:24%">Party</th><th style="width:18%">DPDP role</th><th>What they may do with personal data</th></tr>
+    <tr><td>Accel Telecom (Accel Business)</td><td><b>Data Fiduciary</b></td><td>Decides the purposes and means; owns the notice, consent, retention, breach reporting and grievance duties.</td></tr>
+    <tr><td>UdyamSync platform, cloud host, OCR</td><td>Data Processor</td><td>Processes only on Accel's written instructions; OCR runs on our own servers, so no third-party AI ever sees document images.</td></tr>
+    <tr><td>Channel partners</td><td>Data Processor (by contract)</td><td>See a masked lead summary only, and only if the owner consents to partner sharing. They may not reuse it or keep copies.</td></tr>
+    <tr><td>WhatsApp BSP, e-sign ASP, UPI/NPCI, optional LLM</td><td>Data Processors</td><td>Each gets the minimum it needs: the phone number for messages, a signing request, a mandate. The LLM gets redacted text only.</td></tr>
+    <tr><td>Business owner / signatory</td><td>Data Principal</td><td>Can see, export, correct, withdraw consent and erase via the <b>My Data</b> page; grievance answered within 7 days.</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2><span>2</span>Consent, per purpose, before any upload</h2>
+  <ul>
+    <li><b>Verification for activation:</b> required, because DoT licensing mandates subscriber KYC. Without it the upload API returns 403.</li>
+    <li><b>Order updates on WhatsApp/SMS:</b> optional, on by choice.</li>
+    <li><b>Sharing with a local partner:</b> optional, <b>off by default</b>. Only with it does a stalled lead reach the Partner Co-Pilot, and then as a masked summary.</li>
+    <li><b>WhatsApp win-back / marketing:</b> optional, <b>off by default</b>. Dropped leads are re-contacted only if they opted in. Historical leads without consent get no message until fresh consent is taken through a channel they already use. Every message carries opt-out.</li>
+    <li>Each record stores the notice version shown. Withdrawing is as easy as giving, and KYC data is never reused for marketing.</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span>3</span>Data minimisation and purpose limitation</h2>
+  <ul>
+    <li>A GSTIN or Udyam lookup replaces typing the business details.</li>
+    <li><b>The Aadhaar number is never collected.</b> DigiLocker and Aadhaar e-sign return a verified yes/no plus a reference ID.</li>
+    <li>We store the e-sign certificate reference, never the OTP.</li>
+    <li>GSTIN, Udyam, phone and ID numbers are masked in the UI, in every API response and in logs (a redaction filter runs on every log line). Chat is stored redacted.</li>
+    <li>Each purpose sees only its own data: KYC data is never used for marketing or for the propensity model.</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span>4</span>Security controls</h2>
+  <ul>
+    <li>Raw identifiers and document images are <b>encrypted at rest</b> (Fernet: AES-128-CBC + HMAC-SHA256; KMS-managed, rotated keys in production).</li>
+    <li>The server re-prices and re-checks every order, so a tampered client cannot buy an ineligible product.</li>
+    <li>Uploads must be PNG, JPEG or WEBP under 6 MB. Partner views are role-based, and every access goes to an append-only audit log.</li>
+    <li>The LLM is guarded against prompt injection, and any ₹ amount it invents is discarded.</li>
+    <li>Secrets live only in <code>.env</code>, never in the repo.</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span>5</span>Auditable consent and breach response</h2>
+  <ul>
+    <li>The consent ledger is append-only, <b>hash-chained and HMAC-sealed</b>: editing or deleting any record breaks the chain, and a CI test proves it.</li>
+    <li>On a personal-data breach, Accel as Data Fiduciary informs the Data Protection Board and affected owners, as the Act requires. The audit log and the ledger give the timeline.</li>
+    <li>The ledger is built to plug into a registered Consent Manager when that rule takes effect.</li>
+  </ul>
+</section>
+
+<section class="wide">
+  <h2><span>6</span>Storage limitation, and how it fits telecom KYC record-keeping</h2>
+  <ul>
+    <li><b>Document images</b> (the photos of certificates and IDs) are purged automatically <b>30 days after verification</b>, and the owner sees the date. Thirty days covers disputes and re-checks during installation. The value is a setting (<code>DOC_RETENTION_DAYS</code>), not hard-coded.</li>
+    <li><b>The KYC record itself is kept</b>, encrypted, for the contract term plus the retention period the telecom licence and DoT KYC instructions prescribe: masked extracted fields, the registry and DigiLocker/e-sign reference IDs, the verification verdict and timestamps. This is the subscriber record an auditor asks for. Abandoned sessions with no order can be erased at any time from My Data.</li>
+  </ul>
+  <div class="flag"><b>Open item for Accel's regulatory team:</b> we have not confirmed whether the licence requires the document <i>image</i> itself, not only the verified record, to be kept for the full retention period. If it does, the image purge moves to the end of that period, with images still encrypted and every access logged. It is a single configuration change.</div>
+</section>
+</div>
+
+<div class="honest"><b>Prototype honesty.</b> The GSTIN and Udyam registries, DigiLocker, e-sign, UPI AutoPay and the WhatsApp channel are <b>simulated</b> behind production-shaped interfaces: the WhatsApp screen is a WhatsApp-style web client, not the WhatsApp Business API. The optional free-tier LLM may retain prompts. That is acceptable only because all data is synthetic and redacted first. Production would use a no-training enterprise tier or a self-hosted model.</div>
+
+<footer><span>Accel UdyamSync · Team Softmax · github.com/ac265640/UdyamSync</span><span>All businesses, people and identifiers in this project are synthetic.</span></footer>
+</body></html>

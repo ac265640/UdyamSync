@@ -11,7 +11,7 @@
 ![cost](https://img.shields.io/badge/runs%20for-%E2%82%B90-0f5e6e)
 ![languages](https://img.shields.io/badge/languages-10-b4232a)
 
-[**▶ Watch the demo (2 min 27 s)**](https://ac265640.github.io/UdyamSync/UdyamSync_Demo.mp4) &nbsp;·&nbsp; [**Deck (PDF)**](https://ac265640.github.io/UdyamSync/UdyamSync_Submission.pdf) &nbsp;·&nbsp; [**Deck (PPT, in browser)**](https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fac265640.github.io%2FUdyamSync%2FUdyamSync_Submission.pptx) &nbsp;·&nbsp; [**Showcase page**](https://ac265640.github.io/UdyamSync/) &nbsp;·&nbsp; [**Architecture**](docs/ARCHITECTURE.md) &nbsp;·&nbsp; [**Privacy note**](docs/PRIVACY_NOTE.md) &nbsp;·&nbsp; [**Run it**](#run-it-in-two-commands)
+[**▶ Watch the demo (2 min 27 s)**](https://ac265640.github.io/UdyamSync/UdyamSync_Demo.mp4) &nbsp;·&nbsp; [**Business case (PDF)**](https://ac265640.github.io/UdyamSync/UdyamSync_Submission.pdf) &nbsp;·&nbsp; [**Architecture (PDF)**](https://ac265640.github.io/UdyamSync/UdyamSync_Architecture.pdf) &nbsp;·&nbsp; [**Privacy note (PDF)**](https://ac265640.github.io/UdyamSync/UdyamSync_Privacy_Note.pdf) &nbsp;·&nbsp; [**Deck (PPT, in browser)**](https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fac265640.github.io%2FUdyamSync%2FUdyamSync_Submission.pptx) &nbsp;·&nbsp; [**Showcase page**](https://ac265640.github.io/UdyamSync/) &nbsp;·&nbsp; [**Run it**](#run-it-in-two-commands)
 
 <a href="https://ac265640.github.io/UdyamSync/UdyamSync_Demo.mp4"><img src="docs/video-poster.jpg" alt="Play the UdyamSync demo video" width="100%"></a>
 
@@ -24,6 +24,15 @@
 > The case uses a fictional operator, **Accel Telecom**, and its B2B arm **Accel Business**. Every business, person, identifier and figure here is synthetic. A header toggle switches the whole product to the Airtel theme.
 
 ---
+
+## The four deliverables the case asks for
+
+| # | Deliverable | Where |
+|---|---|---|
+| 1 | Working prototype: demo video (≤ 3 min) + code | [Demo video, 2:27](https://ac265640.github.io/UdyamSync/UdyamSync_Demo.mp4) · this repository |
+| 2 | Solution architecture diagram | [Architecture (PDF)](https://ac265640.github.io/UdyamSync/UdyamSync_Architecture.pdf) · [image](docs/architecture.png) · [data flows](docs/ARCHITECTURE.md) |
+| 3 | Business case, ≤ 10 slides | [PDF](https://ac265640.github.io/UdyamSync/UdyamSync_Submission.pdf) · [PPTX](submission/UdyamSync_Submission.pptx) |
+| 4 | 1-page data privacy and security note | [Privacy note (PDF)](https://ac265640.github.io/UdyamSync/UdyamSync_Privacy_Note.pdf) · [markdown](docs/PRIVACY_NOTE.md) |
 
 ## The problem, in the case's own numbers
 
@@ -43,7 +52,7 @@ The biggest leaks are a visit that never happens (827 leads), a quote that is to
 | 1 · Discover | 2 · OneBill | 3 · Verify | 4 · Sign & track |
 |:---:|:---:|:---:|:---:|
 | <img src="submission/assets/crops/advisor.png" width="220"> | <img src="submission/assets/crops/onebill.png" width="220"> | <img src="submission/assets/crops/kyc.png" width="220"> | <img src="submission/assets/crops/tracker.png" width="220"> |
-| Three questions by **text or voice** in Hindi, Marathi or English (+7 languages via AI). A **GSTIN fills half the answers** from the registry. | **Essential / Recommended / Pro** on one monthly line. Add-ons toggle and re-price live; each branch gets **fibre or 5G AirFiber by pincode**. | **Consent first**, then photos read **on our own server** and checked against the **GST and Udyam registries**, with a fix for every problem. | **Aadhaar e-sign** (or a link to an absent signatory), **slide-to-order UPI AutoPay**, then a five-stage tracker with WhatsApp updates. |
+| Three questions by **text or voice**: Hindi, Marathi and English built in (work offline), 7 more via the optional GenAI layer. A **GSTIN fills half the answers** from the registry. | **Essential / Recommended / Pro** on one monthly line. Add-ons toggle and re-price live; each branch gets **fibre or 5G AirFiber by pincode**. | **Consent first**, then photos read **on our own server** and checked against the **GST and Udyam registries**, with a fix for every problem. | **Aadhaar e-sign** (or a link to an absent signatory), **slide-to-order UPI AutoPay**, then a five-stage tracker with WhatsApp updates. |
 
 **Design rule: the AI talks, the rules engine decides.** Prices, eligibility and product dependencies come only from `product_catalogue.csv`. Any ₹ figure the language model writes that isn't in the structured quote is discarded. Every order is re-priced and re-checked on the server.
 
@@ -55,7 +64,7 @@ The biggest leaks are a visit that never happens (827 leads), a quote that is to
 <td width="50%"><b>Smart KYC Inspector.</b> All 12 specimen applicants (K01–K12) go through the real pipeline: OCR on our own server (RapidOCR/ONNX), watermark removal, auto-deskew, GSTIN O/0 correction, then 20+ registry checks. Findings are drawn exactly where the OCR read them. Every planted problem is caught: cancelled GSTIN, blank Udyam number, blurred scan, missing document, GSTIN typo (a fix is suggested from the registry), edited business name, and a 257-day-old bill.</td>
 </tr>
 <tr>
-<td><b>WhatsApp, in Marathi.</b> The same advisor session runs inside a WhatsApp-style chat, with quick replies and voice notes. The quote card hands off to the web OneBill without repeating anything.</td>
+<td><b>WhatsApp-style chat, in Marathi.</b> The same advisor session runs inside a WhatsApp-style web chat (a simulation; production would use the WhatsApp Business API), with quick replies and voice notes. The quote card hands off to the web OneBill without repeating anything.</td>
 <td><img src="docs/screenshots/07-whatsapp-marathi.png" alt="WhatsApp view"></td>
 </tr>
 <tr>
@@ -81,14 +90,19 @@ Also in the product:
 
 | Metric that matters | Today | Replayed | Pilot target |
 |---|---|---|---|
-| Lead → activation | 7.36 % | **17.8 %** | ≥ 15 % |
-| Days lead → live | 17.6 | **8.6** | ≤ 9 |
-| Cost per activation | ₹15,053 | **₹3,964** | ≤ ₹5,000 |
-| Status chase calls / customer | 3.0 | **0.5** | ≤ 0.5 |
-| 6-month churn | 15.2 % | **5.9 %** | ≤ 8 % |
+| Lead → activation | 7.36 % | **17.8 %** | ≥ 12 % |
+| Days lead → live | 17.6 | **8.6** | ≤ 12 |
+| Cost per activation | ₹15,053 | **₹3,964** | ≤ ₹7,500 |
+| Status chase calls / customer | 3.0 | **0.5** | ≤ 1.0 |
+| 6-month churn | 15.2 % | **5.9 %** | ≤ 11 % |
 | Rule-breaking sales | 56 | **0** | 0 |
 
-That is **+521 activations a quarter**, about **₹28 crore a year in new recurring revenue**. Churn falls because, in the data, churn rises with every chase call (1 call → 5.9 %, 5 calls → 27.9 %), and the tracker removes those calls.
+That is **+521 activations a quarter** and about **₹18 crore of annual recurring revenue run-rate after one year**:
+521 × 4 quarters × 94 % retained × ₹7,771 (median bundle of the segment mix actually won back, mostly micro retail) × 12.
+
+- **Pilot targets** sit well below the replay, so the pilot is judged with a margin of safety, not against our own model.
+- **Days to live:** quote, KYC and e-sign happen in one sitting, so only install time is left, and it depends on the product (AirFiber 2 days, fibre 5, leased line 21–30). The tracker shows an ETA per product.
+- **Churn:** in the data, churn rises with every chase call (1 call → 5.9 %, 5 calls → 27.9 %). That is a correlation; if only half of it is causal, churn still falls to about 10.6 %.
 
 ## Architecture
 
@@ -113,7 +127,7 @@ cd frontend && npm install && npm run dev                                   # ht
 - **Optional AI:** copy `.env.example` to `.env` and set `LLM_PROVIDER=gemini` with a free Google AI Studio key (no card) to unlock the other 7 languages and free-form questions.
 - **Demo shortcuts:** open any page with `?demo=1` (or use "Show demo shortcuts" in the footer) for one-tap entry points, for example the Hindi clinic, the 3-branch restaurant, or KYC trap K05.
 
-**Tests:** `cd backend && .venv/bin/python -m pytest -q` runs 65 tests: 30 advisor scenarios, all 12 KYC specimens, end-to-end orders, multi-site feasibility, remote e-sign, consent tamper detection, encryption and erasure. CI runs them on every push, together with the frontend build.
+**Tests:** `cd backend && .venv/bin/python -m pytest -q` runs 65 tests: 30 internal advisor scenarios (the judges' scenarios will differ), all 12 KYC specimens, end-to-end orders, multi-site feasibility, remote e-sign, consent tamper detection, encryption and erasure. CI runs them on every push, together with the frontend build.
 
 ## Repository
 

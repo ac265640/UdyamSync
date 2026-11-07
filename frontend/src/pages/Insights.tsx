@@ -93,7 +93,7 @@ export default function Insights() {
           </div>
           <div className="mt-3 grid gap-3 sm:grid-cols-3">
             <div className="rounded-xl bg-paper p-3 text-sm"><div className="text-xs text-muted">Extra activations / quarter</div><div className="text-xl font-bold">+{r.impact.extra_activations_per_quarter.toLocaleString('en-IN')}</div></div>
-            <div className="rounded-xl bg-paper p-3 text-sm"><div className="text-xs text-muted">Extra annual recurring revenue</div><div className="text-xl font-bold">{inr(r.impact.extra_annual_recurring_revenue_inr / 1e7)} Cr</div></div>
+            <div className="rounded-xl bg-paper p-3 text-sm"><div className="text-xs text-muted">Extra ARR run-rate after 1 year</div><div className="text-xl font-bold">{inr(r.impact.extra_annual_recurring_revenue_inr / 1e7)} Cr</div></div>
             <div className="rounded-xl bg-paper p-3 text-sm"><div className="text-xs text-muted">NPS (from chase-call link)</div><div className="text-xl font-bold">{r.before.nps} → {r.after.nps}</div></div>
           </div>
           <ul className="mt-3 list-disc space-y-0.5 pl-5 text-xs text-muted">{r.assumptions.notes.map((n) => <li key={n}>{n}</li>)}</ul>

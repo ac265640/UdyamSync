@@ -254,7 +254,7 @@ export type Replay = {
   stages: { from: string; to: string; old_rate_pct: number; new_rate_pct: number }[]
   before: Metrics
   after: Metrics
-  impact: { extra_activations_per_quarter: number; extra_annual_recurring_revenue_inr: number; blended_monthly_bundle_value: number }
+  impact: { extra_activations_per_quarter: number; extra_annual_recurring_revenue_inr: number; extra_customers_after_year: number; blended_monthly_bundle_value: number }
 }
 export type Compliance = {
   activations_checked: number

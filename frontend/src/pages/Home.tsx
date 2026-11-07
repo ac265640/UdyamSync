@@ -64,7 +64,7 @@ export default function Home() {
           <div>
             <h2 className="display text-[clamp(2.2rem,4vw,3.4rem)]">The same quarter, replayed</h2>
             <p className="lede mt-5">We ran all 5,000 real leads back through UdyamSync. Each drop reason is won back only by the feature that removes it, at deliberately cautious rates. Every assumption is a slider you can move.</p>
-            {r && <p className="mt-4 text-[0.95rem] text-ink">That is <b className="num">+{r.impact.extra_activations_per_quarter.toLocaleString('en-IN')}</b> businesses switched on every quarter, about <b className="num">{inr(r.impact.extra_annual_recurring_revenue_inr / 1e7)} crore</b> a year in new recurring revenue.</p>}
+            {r && <p className="mt-4 text-[0.95rem] text-ink">That is <b className="num">+{r.impact.extra_activations_per_quarter.toLocaleString('en-IN')}</b> businesses switched on every quarter, about <b className="num">{inr(r.impact.extra_annual_recurring_revenue_inr / 1e7)} crore</b> of new annual recurring revenue after one year, net of churn.</p>}
             <div className="mt-8 flex flex-wrap gap-3">
               <Link to="/insights" className="btn-ink">Move the assumptions <ArrowRight size={16} /></Link>
               <Link to="/kyc-inspector" className="btn-ghost">Watch KYC catch the 12 specimens</Link>
