@@ -4,7 +4,7 @@
 
 ### *Ek baar mein vyapar digital* — get a small business online in one sitting
 
-**Airtel SYNC 2026 · YTL Hackathon · Enterprise Track A · Project Udyam Digital**
+**Team Softmax** · **Airtel SYNC 2026 · YTL Hackathon · Enterprise Track A · Project Udyam Digital**
 
 [![CI](https://github.com/ac265640/UdyamSync/actions/workflows/ci.yml/badge.svg)](https://github.com/ac265640/UdyamSync/actions/workflows/ci.yml)
 ![tests](https://img.shields.io/badge/tests-65%20passing-1e7b4e)
