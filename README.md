@@ -31,7 +31,7 @@
 |---|---|---|
 | 1 | Working prototype: demo video (≤ 3 min) + code | [Demo video, 2:27](https://ac265640.github.io/UdyamSync/UdyamSync_Demo.mp4) · this repository |
 | 2 | Solution architecture diagram | [Architecture (PDF)](https://ac265640.github.io/UdyamSync/UdyamSync_Architecture.pdf) · [image](docs/architecture.png) · [data flows](docs/ARCHITECTURE.md) |
-| 3 | Business case, ≤ 10 slides | [PDF](https://ac265640.github.io/UdyamSync/UdyamSync_Submission.pdf) · [PPTX](submission/UdyamSync_Submission.pptx) |
+| 3 | Business case (7 slides, as the submission form asks) | [PDF](https://ac265640.github.io/UdyamSync/UdyamSync_Submission.pdf) · [PPTX](submission/UdyamSync_Submission.pptx) |
 | 4 | 1-page data privacy and security note | [Privacy note (PDF)](https://ac265640.github.io/UdyamSync/UdyamSync_Privacy_Note.pdf) · [markdown](docs/PRIVACY_NOTE.md) |
 
 ## The problem, in the case's own numbers

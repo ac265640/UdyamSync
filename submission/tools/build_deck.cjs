@@ -1,4 +1,4 @@
-// Builds the 10-slide submission deck on the Airtel SYNC template backgrounds.
+// Builds the 7-slide submission deck on the Airtel SYNC template backgrounds.
 // node build_deck.cjs  ->  ../UdyamSync_Submission.pptx
 const pptxgen = require('pptxgenjs')
 const path = require('path')
@@ -138,7 +138,7 @@ const button = (slide, label, url, x, y, w, h, fill, color, size = 13) => slide.
 // ============================================================== 5. Segments + bundles (Key question 1)
 {
   const s = pres.addSlide({ masterName: 'CONTENT' })
-  title(s, 'Digital fit × volume decides who goes self-serve', 'Bundles: the advisor’s live pick for a typical business in each segment (prices ex-GST). Conversion and payback: smb_leads.csv.')
+  title(s, 'Who first, through which channel: digital fit × volume', 'Advisor’s live bundle for a typical business per segment (ex-GST). Leads the app can’t close go to partners and reps.')
   const hdr = (t) => ({ text: t, options: { bold: true, color: WHITE, fill: { color: INK } } })
   const pr = (t) => ({ text: t, options: { bold: true, color: RED, fontFace: HEAD, fontSize: 12.5 } })
   const ch = (t, c) => ({ text: t, options: { bold: true, color: c } })
@@ -151,43 +151,19 @@ const button = (slide, label, url, x, y, w, h, fill, color, size = 13) => slide.
   ], { x: 0.45, y: 1.4, w: 9.1, colW: [1.9, 3.0, 0.82, 0.95, 0.66, 0.85, 0.92], fontFace: BODY, fontSize: 9, color: INK, border: { type: 'solid', pt: 0.5, color: LINE }, fill: { color: WHITE }, rowH: [0.3, 0.48, 0.48, 0.48, 0.48], valign: 'middle', margin: [0.03, 0.05, 0.03, 0.05] })
   T(s, '* Payback = acquisition cost ÷ monthly bundle revenue (revenue, not margin). Today’s cost per segment → UdyamSync blended ₹3,964, shown for the self-serve segments.', { x: 0.45, y: 3.68, w: 9.1, h: 0.22, fontSize: 8, color: MUTED })
   const tiles = [
-    ['Self-serve where it fits', 'Offices and kirana are 80% of the base, single-site, with needs a 3-question advisor can price. Offices lead: 86% have a GSTIN, so KYC is instant.', 'EEF5F5', 'C9DFE2', PEACOCK],
-    ['Kirana: volume, not margin', 'Worst conversion (4.1%) and payback (8.1 mo) today, so only the cheapest channel works: WhatsApp, Essential tier, partner-assisted KYC.', PANEL, LINE, INK],
-    ['Field sales where it pays', 'Chains and factories convert well and pay back fastest, but need surveys, SD-WAN and leased lines. The advisor qualifies; a rep closes.', 'FBEAEA', 'F0C9C9', KHATA],
+    ['Self-serve web: offices', '25% of the base, 11.1% conversion, and 86% have a GSTIN, so KYC is instant. The advisor runs discovery through to tracking: no visit needed.', 'EEF5F5', 'C9DFE2', PEACOCK],
+    ['WhatsApp + partner: kirana', 'Most volume, weakest economics (4.1%, 8.1-mo payback), so only the cheapest channel works. Partners get consented stalled leads, ranked by win-back score (AUC 0.73), with commission.', PANEL, LINE, INK],
+    ['Field sales: chains, factories', 'Fastest payback (0.6–1.0 mo) but need surveys, SD-WAN and leased lines. The advisor qualifies and books; reps keep the credit and close.', 'FBEAEA', 'F0C9C9', KHATA],
   ]
   tiles.forEach(([h, b, f, l, c], i) => {
     const x = 0.45 + i * 3.07
     panel(s, x, 3.98, 2.96, 1.16, f, l)
-    T(s, h, { x: x + 0.14, y: 4.05, w: 2.7, h: 0.26, fontSize: 11.5, bold: true, color: c })
-    T(s, b, { x: x + 0.14, y: 4.32, w: 2.7, h: 0.78, fontSize: 9.5, color: INK })
+    T(s, h, { x: x + 0.14, y: 4.04, w: 2.7, h: 0.24, fontSize: 11, bold: true, color: c })
+    T(s, b, { x: x + 0.14, y: 4.3, w: 2.7, h: 0.8, fontSize: 8.8, color: INK })
   })
 }
 
-// ============================================================== 6. Field force + partners (Key question 4)
-{
-  const s = pres.addSlide({ masterName: 'CONTENT' })
-  title(s, 'The app adds to the field force and partners; it never competes', 'Live Partner Co-Pilot: leads the advisor can’t close go to the local partner (with the owner’s consent), ranked, with the chat summary.')
-  shot(s, 'partner.png', 0.48, 1.42, { w: 4.9 })
-  T(s, bullets(['4,632 dropped leads ranked by a win-back score: propensity model (AUC 0.73) × how recoverable the drop reason is', 'Assisted mode on a tablet; KYC exceptions fixed with the owner']), { x: 0.45, y: 4.48, w: 4.95, h: 0.68, fontSize: 9.5, paraSpaceAfter: 2 })
-  T(s, 'Who does what', { x: 5.65, y: 1.38, w: 2.4, h: 0.26, fontSize: 12, bold: true })
-  const roles = [
-    ['Advisor (web, voice, chat)', 'Self-serve for offices and kirana: discovery, quote, KYC, e-sign, tracking'],
-    ['Channel partners', 'Get every consented stalled lead in their area, plus commission on digital sales there'],
-    ['Field sales', 'Multi-site and factory deals only; the advisor qualifies and books the survey'],
-  ]
-  roles.forEach(([h, b], i) => {
-    const y = 1.66 + i * 0.75
-    s.addShape(pres.shapes.OVAL, { x: 5.65, y: y + 0.04, w: 0.26, h: 0.26, fill: { color: [PEACOCK, RED, INK][i] }, line: { color: WHITE } })
-    T(s, String(i + 1), { x: 5.65, y: y + 0.04, w: 0.26, h: 0.26, fontSize: 10, bold: true, color: WHITE, align: 'center', valign: 'middle' })
-    T(s, [{ text: h, options: { bold: true, breakLine: true } }, { text: b, options: { color: MUTED, fontSize: 9 } }], { x: 6.0, y, w: 2.15, h: 0.72, fontSize: 10 })
-  })
-  shot(s, 'whatsapp.png', 8.38, 1.42, { h: 2.25 })
-  T(s, 'WhatsApp-style chat (mock); production uses the WhatsApp Business API', { x: 8.2, y: 3.72, w: 1.4, h: 0.5, fontSize: 7.5, color: MUTED, align: 'center' })
-  panel(s, 5.65, 4.25, 3.9, 0.9, 'EEF5F5', 'C9DFE2')
-  T(s, [{ text: 'Why partners and reps say yes\n', options: { bold: true, color: PEACOCK, fontSize: 10.5 } }, { text: '827 leads drop today because no visit happened. These become warm, pre-qualified calls: fewer wasted visits, more closes, credit kept.', options: { fontSize: 9 } }], { x: 5.78, y: 4.31, w: 3.7, h: 0.8 })
-}
-
-// ============================================================== 7. Impact (Key question 5)
+// ============================================================== 6. Impact (Key question 5)
 {
   const s = pres.addSlide({ masterName: 'CONTENT' })
   title(s, 'Five metrics, conservative targets: same 5,000 leads replayed', 'Live Insights screen: each drop reason is won back only by the feature that removes it, at cautious 10–50% rates (all adjustable).')
@@ -218,64 +194,35 @@ const button = (slide, label, url, x, y, w, h, fill, color, size = 13) => slide.
   ]), { x: 4.6, y: 3.2, w: 4.95, h: 1.95, fontSize: 9, color: INK, paraSpaceAfter: 3 })
 }
 
-// ============================================================== 8. Architecture
+// ============================================================== 7. Architecture, rollout, risks, links
 {
   const s = pres.addSlide({ masterName: 'CONTENT' })
-  title(s, 'Architecture: the AI talks, the rules engine decides', 'Mocks sit behind production interfaces, so the pilot swaps adapters, not logic.')
-  shot(s, 'architecture_slide.png', 0.5, 1.42, { w: 8.9 })
-  button(s, 'Full diagram + data flows (PDF) ↗', ARCH, 6.75, 1.03, 2.8, 0.3, PEACOCK, WHITE, 9.5)
-}
-
-// ============================================================== 9. Rollout + risks
-{
-  const s = pres.addSlide({ masterName: 'CONTENT' })
-  title(s, 'Rollout in three gates, and the risks that could stop it', 'Each phase starts only when the previous one meets the pilot targets on slide 7.')
-  const ro = [
-    ['0–90 days', 'Pilot: Pune + Jaipur', 'Offices on web, kirana on WhatsApp, 20 partners. Real DigiLocker and e-sign; compliance sign-off on KYC retention first.'],
-    ['3–6 months', '6 cities', 'GSP registry APIs, NPCI AutoPay, WhatsApp Business API. Field reps get advisor-qualified leads.'],
-    ['6–12 months', 'All tier 1–2 cities', 'Multi-site and factory deals run through the Co-Pilot; LLM on an enterprise no-training tier.'],
-  ]
-  ro.forEach(([w, h, d], i) => {
-    const y = 1.42 + i * 1.22
-    panel(s, 0.45, y, 3.65, 1.12, i === 0 ? 'FBEAEA' : PANEL, i === 0 ? 'F0C9C9' : LINE)
-    T(s, [{ text: w + '   ', options: { bold: true, color: RED } }, { text: h, options: { bold: true } }], { x: 0.6, y: y + 0.08, w: 3.4, h: 0.26, fontSize: 11 })
-    T(s, d, { x: 0.6, y: y + 0.38, w: 3.4, h: 0.7, fontSize: 9.5, color: MUTED })
+  title(s, 'Built to ship: architecture, rollout and risks', 'The AI talks, the rules engine decides; mocks sit behind production interfaces. Full diagram and privacy note: separate PDFs below.')
+  shot(s, 'architecture_slide.png', 0.48, 1.42, { w: 5.55 })
+  const ro = [['0–90 days', 'Pune + Jaipur pilot, 20 partners, real e-sign'], ['3–6 months', '6 cities, GSP + NPCI + WhatsApp APIs'], ['6–12 months', 'All tier 1–2 cities, field deals via Co-Pilot']]
+  ro.forEach(([w, d], i) => {
+    const x = 0.45 + i * 1.87
+    panel(s, x, 3.82, 1.8, 0.72, i === 0 ? 'FBEAEA' : PANEL, i === 0 ? 'F0C9C9' : LINE)
+    T(s, [{ text: w + '\n', options: { bold: true, color: RED, fontSize: 9.5 } }, { text: d, options: { fontSize: 8.5, color: INK } }], { x: x + 0.09, y: 3.87, w: 1.64, h: 0.64 })
   })
+  T(s, 'Each phase starts only when the one before meets the slide 6 targets.', { x: 0.45, y: 4.56, w: 5.6, h: 0.18, fontSize: 7.5, color: MUTED })
   const hdr = (t) => ({ text: t, options: { bold: true, color: WHITE, fill: { color: INK } } })
   const k = (t) => ({ text: t, options: { bold: true } })
   s.addTable([
     [hdr('Risk'), hdr('How we handle it')],
-    [k('Technician capacity'), 'Faster sales can swamp install crews: city launches are gated on crew capacity, the SLA watch flags installs at risk of passing 21 days, and AirFiber (2 days) covers fibre backlogs.'],
-    [k('Field force pushback'), 'Reps keep credit for advisor-qualified leads in their territory and focus on high-value multi-site and factory deals.'],
-    [k('Partner pushback'), 'Stalled leads and commission flow to them; assisted mode makes them faster, not redundant.'],
-    [k('Payment / AutoPay failure'), 'UPI mandate retry, then card or net-banking mandate; the order is held, not cancelled, with WhatsApp reminders.'],
-    [k('Wrong AI answer'), 'Prices only from the catalogue; internal 30-scenario eval in CI (the judges’ scenarios will differ).'],
-    [k('Document fraud'), 'Registry cross-checks, tamper and name-match flags, human exception queue.'],
-  ], { x: 4.3, y: 1.42, w: 5.25, colW: [1.45, 3.8], fontFace: BODY, fontSize: 8.5, color: INK, border: { type: 'solid', pt: 0.5, color: LINE }, fill: { color: WHITE }, rowH: [0.26, 0.56, 0.45, 0.45, 0.45, 0.45, 0.4], valign: 'middle', margin: [0.02, 0.06, 0.02, 0.06] })
-}
-
-// ============================================================== 10. The brief, answered + links
-{
-  const s = pres.addSlide({ masterName: 'CONTENT' })
-  title(s, 'Everything the brief asked for, answered', 'Key questions, build challenge and the four deliverables from the case, each mapped to where it is shown.')
-  const hdr = (t) => ({ text: t, options: { bold: true, color: WHITE, fill: { color: INK } } })
-  const ok = (t) => ({ text: '✓  ' + t, options: {} })
-  s.addTable([
-    [hdr('The brief asks'), hdr('Our answer'), hdr('Where')],
-    ['Q1  Segments and bundles', ok('Digital fit × volume; 4 bundles with products, price, contract'), 'Slide 5'],
-    ['Q2  Discovery without a salesperson', ok('Advisor: 3 languages built in + 7 via GenAI, voice or text, GSTIN pre-fill'), 'Slide 3, video'],
-    ['Q3  Near-instant, DPDP-compliant KYC', ok('Registry lookup, on-server OCR, DigiLocker, e-sign; consent per purpose'), 'Slide 4, privacy note'],
-    ['Q4  Role of field force and partners', ok('Partners get consented stalled leads + commission; reps keep big deals'), 'Slide 6'],
-    ['Q5  Metrics and targets', ok('5 metrics: today, replayed, conservative pilot target'), 'Slide 7'],
-    ['Build: advisor, quote, KYC, tracker', ok('All 4 built; stretch: voice, WhatsApp-style chat, partner view, propensity'), 'Slide 3, video'],
-    ['Deliverables 1–4', ok('Video 2:27 + code · architecture PDF · this 10-slide case · 1-page privacy note'), 'Links below'],
-  ], { x: 0.45, y: 1.4, w: 9.1, colW: [2.55, 5.15, 1.4], fontFace: BODY, fontSize: 9.5, color: INK, border: { type: 'solid', pt: 0.5, color: LINE }, fill: { color: WHITE }, rowH: 0.3, valign: 'middle', margin: [0.02, 0.06, 0.02, 0.06] })
-  panel(s, 0.45, 4.0, 9.1, 1.16, INK, INK)
-  button(s, '▶  Watch the demo (2:27)', VIDEO, 0.62, 4.12, 2.45, 0.42, RED, WHITE, 12)
-  button(s, 'GitHub repository', REPO, 3.17, 4.12, 1.95, 0.42, WHITE, INK, 12)
-  button(s, 'Architecture (PDF)', ARCH, 0.62, 4.62, 2.45, 0.38, PEACOCK, WHITE, 11)
-  button(s, 'Privacy note (PDF)', PRIV, 3.17, 4.62, 1.95, 0.38, PEACOCK, WHITE, 11)
-  T(s, [{ text: TEAM, options: { bold: true, color: HALDI, fontSize: 13 } }, { text: '\nLive showcase: ', options: { color: 'D8D0C0', fontSize: 9.5 } }, { text: 'ac265640.github.io/UdyamSync', options: { hyperlink: { url: SITE }, color: WHITE, bold: true, fontSize: 9.5 } }, { text: '\ngithub.com/ac265640/UdyamSync', options: { color: 'D8D0C0', fontSize: 9.5 } }], { x: 5.4, y: 4.1, w: 4.0, h: 0.95, valign: 'middle' })
+    [k('Technician capacity'), 'Launches gated on crew capacity; SLA watch flags installs at risk; AirFiber (2 days) covers fibre backlogs'],
+    [k('Field force & partner pushback'), 'Reps keep credit for qualified leads; partners get stalled leads + commission'],
+    [k('AutoPay failure'), 'Retry, then card or net-banking mandate; order held, not cancelled'],
+    [k('Wrong AI answer'), 'Prices only from the catalogue; internal 30-scenario eval in CI'],
+    [k('Document fraud'), 'Registry cross-checks + human exception queue'],
+    [k('KYC retention rule'), 'Compliance sign-off before the pilot'],
+  ], { x: 6.25, y: 1.42, w: 3.3, colW: [1.05, 2.25], fontFace: BODY, fontSize: 7.5, color: INK, border: { type: 'solid', pt: 0.5, color: LINE }, fill: { color: WHITE }, rowH: [0.24, 0.5, 0.42, 0.38, 0.38, 0.3, 0.3], valign: 'middle', margin: [0.02, 0.05, 0.02, 0.05] })
+  panel(s, 0.45, 4.78, 9.1, 0.4, INK, INK)
+  button(s, '▶  Watch the demo (2:27)', VIDEO, 0.53, 4.83, 2.05, 0.3, RED, WHITE, 10.5)
+  button(s, 'GitHub repository', REPO, 2.66, 4.83, 1.6, 0.3, WHITE, INK, 10.5)
+  button(s, 'Architecture (PDF)', ARCH, 4.34, 4.83, 1.6, 0.3, PEACOCK, WHITE, 10)
+  button(s, 'Privacy note (PDF)', PRIV, 6.02, 4.83, 1.6, 0.3, PEACOCK, WHITE, 10)
+  T(s, TEAM, { x: 7.75, y: 4.83, w: 1.75, h: 0.3, fontSize: 13, bold: true, color: HALDI, valign: 'middle', align: 'center' })
 }
 
 pres.writeFile({ fileName: path.resolve(__dirname, '../UdyamSync_Submission.pptx') }).then((f) => console.log('wrote', f))
