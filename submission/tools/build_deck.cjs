@@ -6,7 +6,8 @@ const path = require('path')
 const A = (p) => path.resolve(__dirname, '../assets', p)
 const SHOT = (p) => path.resolve(__dirname, '../../docs/screenshots', p)
 const REPO = 'https://github.com/ac265640/UdyamSync'
-const VIDEO = `${REPO}/blob/main/submission/UdyamSync_Demo.mp4`
+const SITE = 'https://ac265640.github.io/UdyamSync'
+const VIDEO = `${SITE}/UdyamSync_Demo.mp4`
 
 // Palette: Airtel red from the template as the one sharp accent, ink for text, peacock for product.
 const INK = '1B1A17', MUTED = '5F584C', RED = 'E40000', PEACOCK = '0F5E6E', LEAF = '1E7B4E', PANEL = 'F5F2EC', LINE = 'E2DBCD', WHITE = 'FFFFFF', HALDI = 'B7791F'
@@ -198,8 +199,8 @@ const shot = (slide, file, x, y, w, h) => {
   panel(s, 0.45, 4.32, 9.1, 0.72, 'F2F7F7')
   T(s, [
     { text: 'Code  ', options: { bold: true } }, { text: 'github.com/ac265640/UdyamSync', options: { hyperlink: { url: REPO }, color: PEACOCK } },
-    { text: '      Demo video  ', options: { bold: true } }, { text: 'UdyamSync_Demo.mp4 (2 min 27 s)', options: { hyperlink: { url: VIDEO }, color: PEACOCK } },
-    { text: '      Run it  ', options: { bold: true } }, { text: 'docker compose up → localhost:8080', options: {} },
+    { text: '      Demo video  ', options: { bold: true } }, { text: 'watch (2 min 27 s)', options: { hyperlink: { url: VIDEO }, color: PEACOCK } },
+    { text: '      Showcase  ', options: { bold: true } }, { text: 'ac265640.github.io/UdyamSync', options: { hyperlink: { url: SITE }, color: PEACOCK } },
   ], { x: 0.6, y: 4.4, w: 8.8, h: 0.25, fontSize: 9 })
   T(s, 'Stack: FastAPI · React + Vite · GSAP · RapidOCR (ONNX) · scikit-learn · SQLite · Docker · GitHub Actions. ₹0 to run: offline rules and templates by default, optional free Gemini/Groq key.', { x: 0.6, y: 4.68, w: 8.8, h: 0.3, fontSize: 8.5, color: MUTED })
 }

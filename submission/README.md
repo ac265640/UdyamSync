@@ -1,5 +1,7 @@
 # Submission
 
+**Public links:** [showcase page](https://ac265640.github.io/UdyamSync/) · [play the video](https://ac265640.github.io/UdyamSync/UdyamSync_Demo.mp4) · [open the PDF](https://ac265640.github.io/UdyamSync/UdyamSync_Submission.pdf) · [view the PPT in the browser](https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fac265640.github.io%2FUdyamSync%2FUdyamSync_Submission.pptx)
+
 | File | What it is |
 |---|---|
 | [`UdyamSync_Submission.pdf`](UdyamSync_Submission.pdf) | The 7-slide submission document (PDF) |

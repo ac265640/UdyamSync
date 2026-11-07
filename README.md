@@ -11,7 +11,11 @@
 ![cost](https://img.shields.io/badge/runs%20for-%E2%82%B90-0f5e6e)
 ![languages](https://img.shields.io/badge/languages-10-b4232a)
 
-[**▶ Demo video (2 min 27 s)**](submission/UdyamSync_Demo.mp4) &nbsp;·&nbsp; [**Submission deck (PDF)**](submission/UdyamSync_Submission.pdf) &nbsp;·&nbsp; [**Architecture**](docs/ARCHITECTURE.md) &nbsp;·&nbsp; [**Privacy note**](docs/PRIVACY_NOTE.md) &nbsp;·&nbsp; [**Run it**](#run-it-in-two-commands)
+[**▶ Watch the demo (2 min 27 s)**](https://ac265640.github.io/UdyamSync/UdyamSync_Demo.mp4) &nbsp;·&nbsp; [**Deck (PDF)**](https://ac265640.github.io/UdyamSync/UdyamSync_Submission.pdf) &nbsp;·&nbsp; [**Deck (PPT, in browser)**](https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fac265640.github.io%2FUdyamSync%2FUdyamSync_Submission.pptx) &nbsp;·&nbsp; [**Showcase page**](https://ac265640.github.io/UdyamSync/) &nbsp;·&nbsp; [**Architecture**](docs/ARCHITECTURE.md) &nbsp;·&nbsp; [**Privacy note**](docs/PRIVACY_NOTE.md) &nbsp;·&nbsp; [**Run it**](#run-it-in-two-commands)
+
+<a href="https://ac265640.github.io/UdyamSync/UdyamSync_Demo.mp4"><img src="docs/video-poster.jpg" alt="Play the UdyamSync demo video" width="100%"></a>
+
+<sub>Click the image to play the 2 min 27 s demo (opens in your browser).</sub>
 
 <img src="docs/screenshots/01-landing-hero.png" alt="UdyamSync landing page with the live advisor phone" width="100%">
 
