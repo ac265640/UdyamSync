@@ -1,4 +1,4 @@
-// Builds the 7-slide submission deck on the Airtel SYNC template backgrounds.
+// Builds the 10-slide submission deck on the Airtel SYNC template backgrounds.
 // node build_deck.cjs  ->  ../UdyamSync_Submission.pptx
 const pptxgen = require('pptxgenjs')
 const path = require('path')
@@ -55,7 +55,7 @@ const button = (slide, label, url, x, y, w, h, fill, color, size = 13) => slide.
   T(s, 'TEAM SOFTMAX', { x: 0.65, y: 2.63, w: 5.3, h: 0.24, fontSize: 11, bold: true, color: HALDI, charSpacing: 4 })
   T(s, 'Accel UdyamSync', { x: 0.65, y: 2.88, w: 5.3, h: 0.6, fontFace: HEAD, fontSize: 34, color: WHITE })
   T(s, 'A small business goes online in one sitting: discover, price, verify and track on a phone, in its own language.', { x: 0.65, y: 3.5, w: 5.5, h: 0.5, fontSize: 12, color: WHITE, lineSpacingMultiple: 1.05 })
-  T(s, 'Working prototype  ·  65 tests  ·  12/12 KYC traps caught  ·  10 languages  ·  ₹0 to run', { x: 0.65, y: 4.08, w: 5.6, h: 0.22, fontSize: 9.5, bold: true, color: 'F7D9D9' })
+  T(s, 'Working prototype  ·  65 tests  ·  12/12 KYC traps  ·  10 languages  ·  stretch goals built', { x: 0.65, y: 4.08, w: 5.6, h: 0.22, fontSize: 9.5, bold: true, color: 'F7D9D9' })
   button(s, '▶  Watch the demo (2:27)', VIDEO, 0.65, 4.42, 2.55, 0.5, RED, WHITE, 13.5)
   button(s, 'GitHub: ac265640/UdyamSync', REPO, 3.3, 4.42, 2.75, 0.5, WHITE, INK, 12.5)
   T(s, [{ text: 'Live showcase: ', options: {} }, { text: 'ac265640.github.io/UdyamSync', options: { hyperlink: { url: SITE }, color: WHITE, bold: true } }, { text: '   ·   Airtel SYNC 2026 · Enterprise Track A', options: {} }], { x: 0.65, y: 5.0, w: 5.4, h: 0.22, fontSize: 9.5, color: 'F2C9C9' })
@@ -107,7 +107,7 @@ const button = (slide, label, url, x, y, w, h, fill, color, size = 13) => slide.
     T(s, body, { x: 0.45 + i * 2.3, y: 4.14, w: 2.15, h: 0.5, fontSize: 9.5, color: MUTED })
   })
   panel(s, 0.45, 4.74, 9.1, 0.44, INK, INK)
-  const proof = [['65', 'automated tests'], ['30/30', 'advisor scenarios'], ['12/12', 'KYC traps caught'], ['10', 'languages + voice'], ['₹0', 'to run (free tiers)']]
+  const proof = [['65', 'automated tests'], ['30/30', 'advisor scenarios'], ['12/12', 'KYC traps caught'], ['10', 'languages + voice'], ['3/3', 'stretch goals']]
   proof.forEach(([n, l], i) => {
     T(s, [{ text: n + '  ', options: { fontFace: HEAD, fontSize: 15, color: HALDI, bold: true } }, { text: l, options: { fontSize: 10, color: WHITE } }], { x: 0.65 + i * 1.82, y: 4.77, w: 1.78, h: 0.36, valign: 'middle' })
   })
@@ -130,33 +130,60 @@ const button = (slide, label, url, x, y, w, h, fill, color, size = 13) => slide.
   T(s, 'Consent per purpose, hash-chained · no Aadhaar number ever stored · OCR on our own server · encrypted, purged 30 days after verification · “My Data”: view, export, erase', { x: 6.08, y: 4.34, w: 3.4, h: 0.76, fontSize: 9.5, color: INK })
 }
 
-// ============================================================== 5. Partners + go-to-market
+// ============================================================== 5. Segments + bundles (Key question 1)
 {
   const s = pres.addSlide({ masterName: 'CONTENT' })
-  title(s, 'Partners stay in the deal. Offices first, kirana at scale', 'Segment order comes from the case economics; bundles are priced live by the prototype’s rules engine.')
-  shot(s, 'partner.png', 0.48, 1.42, { w: 4.5 })
-  T(s, bullets(['Every lead the advisor can’t close reaches a partner with the chat summary, a win-back score (model AUC 0.73) and the next best action', 'Assisted mode on a tablet; commission credited automatically, so the app never takes their customer']), { x: 0.45, y: 4.2, w: 4.6, h: 0.95, fontSize: 10, paraSpaceAfter: 3 })
+  title(s, 'Who first, and what we sell them: four segments, four priced bundles', 'Bundles: the advisor’s live pick for a typical business in each segment. Conversion and payback: smb_leads.csv.')
   const hdr = (t) => ({ text: t, options: { bold: true, color: WHITE, fill: { color: INK } } })
+  const pr = (t) => ({ text: t, options: { bold: true, color: RED, fontFace: HEAD, fontSize: 13 } })
   s.addTable([
-    [hdr('#'), hdr('Segment'), hdr('Conv.'), hdr('Bundle/mo'), hdr('Payback')],
-    ['1', 'Professional offices', '11.1%', '₹6,575', '1.6 mo'],
-    ['2', 'Micro retail (54% of leads)', '4.1%', '₹2,470', '8.1 mo'],
-    ['3', 'Multi-site chains', '11.0%', '₹28,080', '0.6 mo'],
-    ['4', 'Manufacturers', '12.8%', '₹15,910', '1.0 mo'],
-  ], { x: 5.3, y: 1.42, w: 4.25, colW: [0.28, 1.72, 0.66, 0.86, 0.73], fontFace: BODY, fontSize: 10, color: INK, border: { type: 'solid', pt: 0.5, color: LINE }, fill: { color: WHITE }, rowH: 0.3, valign: 'middle', margin: [0.02, 0.05, 0.02, 0.05] })
-  shot(s, 'whatsapp.png', 5.33, 3.2, { h: 1.92 })
-  T(s, 'Priced live by the engine', { x: 6.4, y: 3.18, w: 3.15, h: 0.25, fontSize: 11, bold: true })
-  const b = [['Kirana, Nashik · WhatsApp, Marathi', '₹2,197'], ['Dental clinic, Pune · Hindi voice', '₹5,790'], ['3 restaurants, Pune · 3 branches', '₹11,376']]
-  b.forEach(([n, p], i) => {
-    T(s, [{ text: p, options: { fontFace: HEAD, fontSize: 15, color: RED } }, { text: ' /mo  ' + n, options: { fontSize: 9.5, color: MUTED } }], { x: 6.4, y: 3.47 + i * 0.36, w: 3.2, h: 0.32, valign: 'middle' })
+    [hdr('#'), hdr('Segment · share of base'), hdr('Recommended bundle (typical business)'), hdr('Price / mo'), hdr('Contract'), hdr('Today: conv. · payback')],
+    ['1', { text: 'Professional offices · 25%\nClinic, CA firm, coaching, 14 staff', options: {} }, 'Biz Fibre 300 + 4 business SIMs + cloud email and endpoint security for 14 seats', pr('₹8,197'), '12 mo, no setup fee', '11.1% · 1.6 mo'],
+    ['2', 'Micro retail & services · 55%\nKirana, salon, pharmacy, 3 staff', 'Biz Fibre 100 + 2 business SIMs + WhatsApp Business catalogue (entry: fibre + SIM ₹1,448)', pr('₹3,046'), '12 mo, no setup fee', '4.1% · 8.1 mo'],
+    ['3', 'Small multi-site · 15%\nRestaurant chain, 5 outlets', 'Fibre 300 + SIM at every outlet, 20 cloud CCTV cameras, 4G/5G failover per site, on one bill', pr('₹16,965'), '24 mo, ₹21,750 setup', '11.0% · 0.6 mo'],
+    ['4', 'Small manufacturers · 5%\nAuto-parts unit, 85 staff', '20 Mbps leased line + 9 SIMs + email and security for 29 seats; IoT machine monitoring in Pro', pr('₹19,887'), '24 mo, ₹5,000 setup', '12.8% · 1.0 mo'],
+  ], { x: 0.45, y: 1.42, w: 9.1, colW: [0.3, 2.15, 3.5, 0.95, 1.05, 1.15], fontFace: BODY, fontSize: 9.5, color: INK, border: { type: 'solid', pt: 0.5, color: LINE }, fill: { color: WHITE }, rowH: [0.3, 0.5, 0.5, 0.5, 0.5], valign: 'middle', margin: [0.03, 0.06, 0.03, 0.06] })
+  const tiles = [
+    ['Offices first', 'Highest value per rupee: 11.1% conversion, ₹6,575 median bundle, 1.6-month payback, and 86% already have a GSTIN, so KYC is instant.'],
+    ['Kirana at scale', '54% of leads but very price-sensitive: sold on WhatsApp in Hindi or Marathi, Essential tier only, so the cost to serve stays low.'],
+    ['Every tier saves', 'Commitment discounts of ₹450 to ₹7,975 a month off list price, plus one bill and one support number instead of 3–4 vendors.'],
+  ]
+  tiles.forEach(([h, b], i) => {
+    const x = 0.45 + i * 3.07
+    panel(s, x, 4.0, 2.96, 1.14, i === 0 ? 'FBEAEA' : PANEL, i === 0 ? 'F0C9C9' : LINE)
+    T(s, h, { x: x + 0.14, y: 4.08, w: 2.7, h: 0.26, fontSize: 12, bold: true, color: i === 0 ? KHATA : INK })
+    T(s, b, { x: x + 0.14, y: 4.36, w: 2.7, h: 0.74, fontSize: 9.5, color: MUTED })
   })
-  T(s, 'Micro retail is reached on WhatsApp at near-zero cost to serve; field sales focus on multi-site and manufacturing.', { x: 6.4, y: 4.6, w: 3.15, h: 0.52, fontSize: 9.5, color: PEACOCK, bold: true })
 }
 
-// ============================================================== 6. Impact
+// ============================================================== 6. Field force + partners (Key question 4)
 {
   const s = pres.addSlide({ masterName: 'CONTENT' })
-  title(s, 'Replay the quarter: same 5,000 leads, 2.4× the activations', 'Live Insights screen: each drop reason is won back only by the feature that removes it, at cautious 10–50% rates.')
+  title(s, 'The app adds to the field force and partners; it never competes', 'Live Partner Co-Pilot: leads the advisor can’t close go to the local partner, ranked, with the chat summary attached.')
+  shot(s, 'partner.png', 0.48, 1.42, { w: 4.55 })
+  T(s, bullets(['4,632 dropped leads ranked by a win-back score: propensity model (AUC 0.73) × how recoverable the drop reason is', 'Assisted mode on a tablet; KYC exceptions fixed with the owner']), { x: 0.45, y: 4.27, w: 4.6, h: 0.88, fontSize: 10, paraSpaceAfter: 3 })
+  T(s, 'Who does what', { x: 5.35, y: 1.38, w: 2.6, h: 0.26, fontSize: 12, bold: true })
+  const roles = [
+    ['Advisor (web, voice, WhatsApp)', 'Self-serve for offices and kirana: discovery, quote, KYC, e-sign, tracking'],
+    ['Channel partners', 'Get every stalled lead in their area with a next best action, and earn commission on digital sales there too'],
+    ['Field sales', 'Only multi-site and factory deals: the advisor qualifies and books the site survey'],
+  ]
+  roles.forEach(([h, b], i) => {
+    const y = 1.66 + i * 0.75
+    s.addShape(pres.shapes.OVAL, { x: 5.35, y: y + 0.04, w: 0.26, h: 0.26, fill: { color: [PEACOCK, RED, INK][i] }, line: { color: WHITE } })
+    T(s, String(i + 1), { x: 5.35, y: y + 0.04, w: 0.26, h: 0.26, fontSize: 10, bold: true, color: WHITE, align: 'center', valign: 'middle' })
+    T(s, [{ text: h, options: { bold: true, breakLine: true } }, { text: b, options: { color: MUTED, fontSize: 9 } }], { x: 5.72, y, w: 2.3, h: 0.72, fontSize: 10 })
+  })
+  shot(s, 'whatsapp.png', 8.12, 1.42, { h: 2.0 })
+  T(s, 'Same advisor on WhatsApp, in Marathi', { x: 7.95, y: 3.48, w: 1.62, h: 0.4, fontSize: 8.5, color: MUTED, align: 'center' })
+  panel(s, 5.35, 4.0, 4.2, 1.14, 'EEF5F5', 'C9DFE2')
+  T(s, [{ text: 'Why partners say yes\n', options: { bold: true, color: PEACOCK, fontSize: 11 } }, { text: 'Today 827 leads drop because no visit happened. The Co-Pilot turns those into warm, pre-qualified calls, so partners do fewer visits and close more.', options: { fontSize: 9.5 } }], { x: 5.5, y: 4.08, w: 3.95, h: 1.0 })
+}
+
+// ============================================================== 7. Impact (Key question 5)
+{
+  const s = pres.addSlide({ masterName: 'CONTENT' })
+  title(s, 'Five metrics, five targets: same 5,000 leads, 2.4× the activations', 'Live Insights screen: each drop reason is won back only by the feature that removes it, at cautious 10–50% rates.')
   shot(s, 'insights.png', 0.48, 1.42, { w: 4.6 })
   const big = [['+521', 'activations every quarter'], ['≈ ₹28 Cr', 'new annual recurring revenue'], ['56 → 0', 'rule-breaking sales']]
   big.forEach(([n, l], i) => {
@@ -177,16 +204,56 @@ const button = (slide, label, url, x, y, w, h, fill, color, size = 13) => slide.
   T(s, bullets(['Churn follows chase calls in the data (1 call → 5.9%, 5 calls → 27.9%); the tracker removes the calls.', 'Platform cost ≈ ₹40 per lead (AI, OCR, hosting); field effort shifts to leads the advisor hands over.', 'Compliance re-run: all 56 historical rule breaches are blocked at quote time.']), { x: 5.35, y: 3.65, w: 4.2, h: 1.48, fontSize: 10, color: INK, paraSpaceAfter: 4 })
 }
 
-// ============================================================== 7. Architecture, rollout, risks, links
+// ============================================================== 8. Architecture, rollout, risks
 {
   const s = pres.addSlide({ masterName: 'CONTENT' })
   title(s, 'Engineered to ship: architecture, rollout, risks', 'The AI talks, the rules engine decides. Mocks sit behind production interfaces, so the pilot swaps adapters, not logic.')
-  s.addImage({ path: path.resolve(__dirname, '../../docs/architecture.png'), x: 0.45, y: 1.4, w: 5.0, h: 2.81 })
-  T(s, 'Rollout', { x: 5.7, y: 1.36, w: 3.85, h: 0.25, fontSize: 12, bold: true })
+  s.addImage({ path: path.resolve(__dirname, '../../docs/architecture.png'), x: 0.45, y: 1.4, w: 6.2, h: 3.49 })
+  T(s, 'Rollout', { x: 6.9, y: 1.36, w: 2.65, h: 0.25, fontSize: 12, bold: true })
   const ro = [['0–90 days', 'Pune + Jaipur pilot: offices on web, 20 partners, real DigiLocker and e-sign'], ['3–6 months', '6 cities; kirana on WhatsApp; GSP registry APIs, NPCI AutoPay'], ['6–12 months', 'All tier 1–2 cities; multi-site and factories via the Co-Pilot']]
-  ro.forEach(([w, d], i) => T(s, [{ text: w + '  ', options: { bold: true, color: RED } }, { text: d }], { x: 5.7, y: 1.62 + i * 0.44, w: 3.85, h: 0.42, fontSize: 10 }))
-  T(s, 'Risks, handled', { x: 5.7, y: 2.98, w: 3.85, h: 0.25, fontSize: 12, bold: true })
-  T(s, bullets(['Wrong AI answer → prices only from the catalogue; 30-scenario eval in CI', 'Partner pushback → leads and commission flow to them', 'Document fraud → registry checks + human exception queue']), { x: 5.7, y: 3.24, w: 3.85, h: 0.95, fontSize: 10, paraSpaceAfter: 2 })
+  ro.forEach(([w, d], i) => T(s, [{ text: w + '\n', options: { bold: true, color: RED } }, { text: d }], { x: 6.9, y: 1.64 + i * 0.6, w: 2.65, h: 0.58, fontSize: 9.5 }))
+  T(s, 'Risks, handled', { x: 6.9, y: 3.48, w: 2.65, h: 0.25, fontSize: 12, bold: true })
+  T(s, bullets(['Wrong AI answer → prices only from the catalogue; 30-scenario eval in CI', 'Partner pushback → leads and commission flow to them', 'Document fraud → registry checks + human exception queue']), { x: 6.9, y: 3.74, w: 2.65, h: 1.4, fontSize: 9.5, paraSpaceAfter: 2 })
+}
+
+// ============================================================== 9. Privacy & security note (deliverable 4)
+{
+  const s = pres.addSlide({ masterName: 'CONTENT' })
+  title(s, 'Privacy and security note: DPDP Act, 2023 built into the product', 'Every choice below is implemented and tested in the prototype; the full 1-page note is docs/PRIVACY_NOTE.md in the repo.')
+  const tiles = [
+    ['Consent, per purpose', 'Asked before any upload (no consent, no upload). Verification is required; WhatsApp updates, partner sharing and marketing are separate and off by default. KYC data is never reused for marketing.'],
+    ['Data minimisation', 'A GSTIN lookup replaces typing the details. The Aadhaar number is never collected: DigiLocker and e-sign return yes/no and a reference. Partners see a masked summary, never documents.'],
+    ['Masked and encrypted', 'GSTIN, Udyam, phone and ID numbers are masked in the UI, APIs and logs. Raw IDs and images are encrypted at rest; OCR runs on our own server, never a third-party AI.'],
+    ['Storage limitation', 'Document images are purged automatically 30 days after verification, and the owner sees the date. Masked fields are kept only for the contract plus the telecom audit period.'],
+    ['Consent you can audit', 'Append-only ledger, hash-chained and HMAC-sealed, tied to the notice version shown. Editing any record breaks the chain, and a CI test proves it.'],
+    ['Rights and security', '“My Data” page: view, export, withdraw consent, erase; grievance reply in 7 days. Server re-prices every order, uploads are type- and size-checked, partner views are role-based.'],
+  ]
+  tiles.forEach(([h, b], i) => {
+    const col = i % 3, row = Math.floor(i / 3)
+    const x = 0.45 + col * 3.07, y = 1.45 + row * 1.5
+    panel(s, x, y, 2.96, 1.4, row === 0 ? 'EEF5F5' : PANEL, row === 0 ? 'C9DFE2' : LINE)
+    T(s, h, { x: x + 0.14, y: y + 0.09, w: 2.7, h: 0.26, fontSize: 12, bold: true, color: PEACOCK })
+    T(s, b, { x: x + 0.14, y: y + 0.38, w: 2.7, h: 0.98, fontSize: 9.5, color: INK })
+  })
+  T(s, [{ text: 'Prototype honesty: ', options: { bold: true } }, { text: 'registries, DigiLocker, e-sign, UPI AutoPay and WhatsApp are simulated behind production interfaces; all data is synthetic and redacted before any AI call.' }], { x: 0.45, y: 4.5, w: 9.1, h: 0.6, fontSize: 9.5, color: MUTED, valign: 'middle' })
+}
+
+// ============================================================== 10. The brief, answered + links
+{
+  const s = pres.addSlide({ masterName: 'CONTENT' })
+  title(s, 'Everything the brief asked for, answered', 'Key questions, build challenge and deliverables from the case, each mapped to where it is shown.')
+  const hdr = (t) => ({ text: t, options: { bold: true, color: WHITE, fill: { color: INK } } })
+  const ok = (t) => ({ text: '✓  ' + t, options: {} })
+  s.addTable([
+    [hdr('The brief asks'), hdr('Our answer'), hdr('Where')],
+    ['Q1  Segments and bundles', ok('Offices first, kirana at scale; 4 bundles with products, price and contract'), 'Slide 5'],
+    ['Q2  Discovery without a salesperson', ok('Voice or text advisor in Hindi, Marathi, English (+7 via AI), 3 questions, GSTIN pre-fill'), 'Slide 3, video'],
+    ['Q3  Near-instant, DPDP-compliant KYC', ok('Registry lookup, on-server OCR, DigiLocker, e-sign; consent per purpose'), 'Slides 4, 9'],
+    ['Q4  Role of field force and partners', ok('Partners get stalled leads + commission; field sales only on big deals'), 'Slide 6'],
+    ['Q5  Metrics and targets', ok('5 metrics with today, replayed and pilot targets'), 'Slide 7'],
+    ['Build: advisor, quote, KYC, tracker', ok('All 4 built; stretch: voice, WhatsApp, partner back-office, propensity score'), 'Slide 3, video'],
+    ['Deliverables', ok('Video 2:27 (≤ 3 min), code, architecture, ≤ 10-slide business case, privacy note'), 'Links below, 8, 9'],
+  ], { x: 0.45, y: 1.4, w: 9.1, colW: [2.65, 5.25, 1.2], fontFace: BODY, fontSize: 9.5, color: INK, border: { type: 'solid', pt: 0.5, color: LINE }, fill: { color: WHITE }, rowH: 0.3, valign: 'middle', margin: [0.02, 0.06, 0.02, 0.06] })
   panel(s, 0.45, 4.3, 9.1, 0.86, INK, INK)
   button(s, '▶  Watch the demo (2:27)', VIDEO, 0.62, 4.42, 2.45, 0.42, RED, WHITE, 12)
   button(s, 'GitHub repository', REPO, 3.17, 4.42, 2.05, 0.42, WHITE, INK, 12)

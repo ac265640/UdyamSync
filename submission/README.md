@@ -4,7 +4,7 @@
 
 | File | What it is |
 |---|---|
-| [`UdyamSync_Submission.pdf`](UdyamSync_Submission.pdf) | The 7-slide submission document (PDF) |
+| [`UdyamSync_Submission.pdf`](UdyamSync_Submission.pdf) | The 10-slide submission document (PDF) |
 | [`UdyamSync_Submission.pptx`](UdyamSync_Submission.pptx) | The same deck as PowerPoint, on the Airtel SYNC template |
 | [`UdyamSync_Demo.mp4`](UdyamSync_Demo.mp4) | 2 min 27 s demo video, 1080p, with voiceover |
 
